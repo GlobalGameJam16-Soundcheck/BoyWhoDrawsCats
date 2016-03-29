@@ -24,3 +24,16 @@ ExportedObj/
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+
+# User Settings
+CurrentLayout.dwlt
+CurrentMaximizeLayout.dwlt
+EditorUserBuildSettings.asset
+InspectorExpandedItems.asset
+
+# Mac Stuff
+.DS_Store
+Library
+Library/*
+Temp
+Build
