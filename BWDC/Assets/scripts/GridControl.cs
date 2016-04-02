@@ -15,17 +15,17 @@ public class GridControl : MonoBehaviour {
        // TextAsset levelCsv = (TextAsset)Resources.Load("level", typeof(TextAsset));
 
         string[,] tempTiles = CSVReader.SplitCsvGrid(levelCsv.text);
-        tilesWidth = tempTiles.GetLength(0)-2;
-        tilesHeight = tempTiles.GetLength(1)-2;
+        tilesWidth = tempTiles.GetLength(0);
+        tilesHeight = tempTiles.GetLength(1);
         tiles = new string[tilesWidth, tilesHeight];
         for (int x = 0; x < tilesWidth; x++)
         {
             for(int y = 0; y < tilesHeight; y++)
             {
                 tiles[x, y] = tempTiles[x, tilesHeight-1 - y];
-                if (tiles[x,y] == "B")
+                if (tiles[x,y] == "block")
                 {
-                   Instantiate(tile, new Vector3(x, y, 0), Quaternion.identity);
+                   Instantiate(tile, new Vector3(x, y-1, 0), Quaternion.identity);
                 }
             }
         }
@@ -35,4 +35,14 @@ public class GridControl : MonoBehaviour {
 	void Update () {
 	
 	}
+    //-------------------
+    public void setTile(int x, int y, string s)
+    {
+        tiles[x, y] = s;
+    }
+    //-------------------
+    public string getTile(int x, int y)
+    {
+        return tiles[x, y];
+    }
 }

@@ -1,0 +1,11 @@
+block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block
+block,,,,,,,,,,,,,,,,exit,block
+block,,,,,,,,,,,,,,,,,block
+block,,,,,,,,,,,,,,,,,block
+block,,,,,,,,,,,,,,,,,block
+block,,,,,,,,,,block,,,,,,,block
+block,,,,,,,,,,block,block,,,,,,block
+block,,,,,,,,,,,,,,,,,block
+block,,,,,,,,,,,,,,,,,block
+block,start,,,,,,block,,,,,,,,,,block
+block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block
