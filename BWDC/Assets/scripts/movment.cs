@@ -4,6 +4,11 @@ using System.Collections;
 public class movment : MonoBehaviour {
 	
     public GameObject highlight;
+	private SpriteRenderer mySprite;
+	public Sprite leftSprite;
+	private Sprite rightSprite;
+
+
     Vector3 dest;
     float walkSpeed = 0.2f;
     GridControl gridCont;
@@ -21,7 +26,10 @@ public class movment : MonoBehaviour {
 	private bool usingElevator = false;
 	private bool goingUp;
 	private int elevCatLayer;
+	private int elevCatMaxJ;
+	private int elevCatMinJ;
 	public int elevCat = 1;
+	private Transform currRidingCat = null;
 
 	// Use this for initialization
 	void Start () {
@@ -33,10 +41,17 @@ public class movment : MonoBehaviour {
 		int xPos = gridCont.convertToTileCoord(transform.position.x);
 		int yPos = gridCont.convertToTileCoord(transform.position.y);
 		dest = new Vector3 (xPos, yPos, 0f);
+		mySprite = GetComponent<SpriteRenderer> ();
+		rightSprite = mySprite.sprite;
     }
 	
 	// Update is called once per frame
 	void Update () {
+		if (facingRight) {
+			mySprite.sprite = rightSprite;
+		} else {
+			mySprite.sprite = leftSprite;
+		}
 		camPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		transform.position = Vector3.MoveTowards(transform.position, new Vector3(dest.x, dest.y, 0), walkSpeed);
 		boyTileI = gridCont.convertToTileCoord (transform.position.x);
@@ -72,11 +87,14 @@ public class movment : MonoBehaviour {
 			nextI = boyTileI + 1;
 		}
 		//a platform cat?
-		if (Input.GetKeyUp ("1")) {
-			nextJ--;
-			tileStuff tileScript = tiles [nextI, nextJ].GetComponent<tileStuff> ();
-			if (reachedDestination() && tileScript.canPlacePlatCat ()) {
-				tileScript.placeCat (elevCat, elevCatPrefab, tileSize);
+		if (Input.GetKeyUp ("1") || Input.GetMouseButtonUp(1)) {
+//			nextJ--;
+			if (onGrid (nextI, nextJ - 1)) {
+				tileStuff tileScript = tiles [nextI, nextJ].GetComponent<tileStuff> ();
+				tileStuff belowTile = tiles [nextI, nextJ - 1].GetComponent < tileStuff> ();
+				if (reachedDestination () && !belowTile.getHasElevCat() && !tileScript.getIsPlatform() && !tileScript.getHasElevCat()) {
+					tileScript.placeCat (elevCat, elevCatPrefab, tileSize);
+				}
 			}
 		}
 	}
@@ -96,27 +114,40 @@ public class movment : MonoBehaviour {
 				//player is trying to move up or down with elev cat
 				Debug.Log("player trying to move up");
 				j = checkVertj;
+				currRidingCat = hit.transform;
+				currRidingCat.SetParent (transform);
+				elevCatControl ecc = hit.transform.GetComponent<elevCatControl> ();
+				elevCatMaxJ = ecc.maxJ;
+				elevCatMinJ = ecc.minJ;
 				usingElevator = true;
-				hit.transform.SetParent (transform);
 			} else {
 				usingElevator = false;
+				if (currRidingCat != null) {
+					currRidingCat.parent = null;
+					currRidingCat = null;
+				}
 			}
 		} else {
 			usingElevator = false;
+			if (currRidingCat != null) {
+				currRidingCat.parent = null;
+				currRidingCat = null;
+			}
 		}
 		Debug.Log ("xPos: " + i + " yPos: " + j);
 		Vector3 potential = new Vector3 (i, j, 0);
 		if (boyTileI == i) {
-			if (!usingElevator) {
-				facingRight = !facingRight;
-			} else {
+			if (usingElevator) {
 				goingUp = (j > boyTileJ);
+			}
+			if (boyTileJ == checkVertj) {
+				facingRight = !facingRight;
 			}
 		} else {
 			facingRight = (i > boyTileI);
 		}
 		dest = potential;
-		Debug.Log (dest + " " + transform.position);
+		Debug.Log ("dest: " + dest + " curr:" + transform.position);
 		highlight.transform.position = new Vector3 (gridCont.convertToTileCoord (camPos.x), gridCont.convertToTileCoord (camPos.y), 0f);
 //		}
 	}
@@ -139,43 +170,48 @@ public class movment : MonoBehaviour {
 			if (goingUp) {
 				nextJ++;
 			} else {
+//				nextJ -= 2;
 				nextJ--;
 			}
-//			Debug.Log (nextI + " " + nextJ + " nextI and nextJ going Up");
 		}
 		if (!destIsValidTile (nextI, nextJ)) {
-			dest = new Vector3 ((float)gridCont.convertToTileCoord (transform.position.x),
-				(float)gridCont.convertToTileCoord (transform.position.y), 0f);
+			dest = new Vector3 (boyTileI, boyTileJ, 0f);
 		} else {
 			newDestIsValid = true;
 		}
 	}
 
-	private bool destIsValidTile(int i, int j){
-		if (!onGrid (i, j)) {
+	private bool destIsValidTile(int nextI, int nextJ){
+		if (!onGrid (nextI, nextJ)) {
 			return false;
 		}
+		tileStuff tileScript = tiles [nextI, nextJ].GetComponent<tileStuff> ();
 		if (!usingElevator) {
-			tileStuff tileScript = tiles [i, j].GetComponent<tileStuff> ();
 			if (tileScript.getIsPlatform ()) {
 				return false;
 			}
-			int nextI = boyTileI;
-			int nextJ = boyTileJ - 1;
-			if (facingRight) {
-				nextI++;
-			} else {
-				nextI--;
+			if (tileScript.getHasElevCat ()) {
+				return true;
 			}
-			if (onGrid (nextI, nextJ)) {
-				tileScript = tiles [nextI, nextJ].GetComponent<tileStuff> ();
-				if (!tileScript.canStandOn ()) {
-					Debug.Log (nextI + " " + nextJ + " cannotStandOn");
+			int checkIsPlatJ = nextJ - 1;
+			if (onGrid (nextI, checkIsPlatJ)) {
+				tileScript = tiles [nextI, checkIsPlatJ].GetComponent<tileStuff> ();
+				if (!tileScript.getIsPlatform ()) {
+					Debug.Log (nextI + " " + checkIsPlatJ + " cannotStandOn");
 					return false;
 				}
+			} else {
+				return false;
 			}
 			return true;
 		} else {
+			if (nextJ > elevCatMaxJ || nextJ < elevCatMinJ) {
+				return false;
+			}
+			//fixme use an elev cat counter?
+			if (tileScript.getIsPlatform ()) {
+				return false;
+			}
 			return true;
 		}
 	}

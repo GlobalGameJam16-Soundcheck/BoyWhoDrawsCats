@@ -27,7 +27,7 @@ public class GridControl : MonoBehaviour {
         for (int x = 0; x < tilesWidth; x++) {
             for(int y = 0; y < tilesHeight; y++) {
 				bool isPlatform = false;
-				if (tempTiles[x, tilesHeight-1 - y] == "block") {
+				if (tempTiles[x, tilesHeight-1 - y] == "b") {
 					tileSpriteRenderer.sprite = blockSprite;
 					isPlatform = true;
 				} else {

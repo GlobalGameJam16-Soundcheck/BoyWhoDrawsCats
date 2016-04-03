@@ -1,11 +1,11 @@
-block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block
-block,,,,,,,,,,,,,,,,exit,block
-block,,,,,,,,,,,,,,,,,block
-block,,,,,,,,,,,,,,,,,block
-block,,,,,,,,,,,,,,,,,block
-block,,,,,,,,,,block,,,,,,,block
-block,,,,,,,,,,block,block,,,,,,block
-block,,,,,,,,,,,,,,,,,block
-block,start,,,,,,block,,,,,,,,,,block
-block,block,block,block,block,,,,block,block,block,block,block,block,block,block,block,block
-block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block,block
+b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b
+b, , , , , , , , , , , , , , , ,e,b
+b, , , , , , , , , , , , , , , , ,b
+b, , , , , , , , , , , , ,b,b, , ,b
+b, , , , , , , , , , ,b,b, , , , ,b
+b, , , , , , , , , ,b, , ,b,b, , ,b
+b, , , , ,b, , , ,b,b, , ,b,b, , ,b
+b, , , , , , , , , , , , ,b, , , ,b
+b,s, , , , ,b,b,b, , , , ,b, , , ,b
+b,b,b,b,b,b, , , ,b,b,b,b,b,b,b,b,b
+b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b

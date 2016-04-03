@@ -7,6 +7,9 @@ public class elevCatControl : allCatsControl {
 	private GameObject[,] tiles;
 	private int currI;
 	private int currJ;
+	private int jRange;
+	public int maxJ { get; set; }
+	public int minJ { get; set; }
 
 	// Use this for initialization
 	void Start () {
@@ -14,6 +17,9 @@ public class elevCatControl : allCatsControl {
 		tiles = gridCont.tiles;
 		currI = gridCont.convertToTileCoord (transform.position.x);
 		currJ = gridCont.convertToTileCoord (transform.position.y);
+		jRange = 3;
+		maxJ = currJ + jRange;
+		minJ = currJ - jRange;
 	}
 	
 	// Update is called once per frame
@@ -23,6 +29,7 @@ public class elevCatControl : allCatsControl {
 		if (newI != currI || newJ != currJ) {
 			tileStuff tileScript = tiles [newI, newJ].GetComponent<tileStuff> ();
 			tileScript.setHasElevCat (true);
+			tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
 			tileScript.setHasElevCat (false);
 			currI = newI;
 			currJ = newJ;
