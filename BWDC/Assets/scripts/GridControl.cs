@@ -40,4 +40,8 @@ public class GridControl : MonoBehaviour {
 		tileSpriteRenderer.sprite = blockSprite;
 	}
 
+	public int convertToTileCoord(float x){
+		return (int)Mathf.Round (x);
+	}
+
 }
