@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GridControl : MonoBehaviour {
 
@@ -38,6 +39,12 @@ public class GridControl : MonoBehaviour {
             }
         }
 		tileSpriteRenderer.sprite = blockSprite;
+	}
+
+	void Update(){
+		if (Input.GetKeyDown ("r")) {
+			SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
+		}
 	}
 
 	public int convertToTileCoord(float x){
