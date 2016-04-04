@@ -11,7 +11,7 @@ public class GridControl : MonoBehaviour {
     public GameObject tile;
 	private SpriteRenderer tileSpriteRenderer;
 	private Sprite blockSprite;
-	public Sprite blankTile;
+	public GameObject blankTile;
     public TextAsset levelCsv;
 
     // Use this for initialization
@@ -29,12 +29,14 @@ public class GridControl : MonoBehaviour {
             for(int y = 0; y < tilesHeight; y++) {
 				bool isPlatform = false;
 				if (tempTiles[x, tilesHeight-1 - y] == "b") {
-					tileSpriteRenderer.sprite = blockSprite;
+//					tileSpriteRenderer.sprite = blockSprite;
 					isPlatform = true;
+					tiles [x, y] = (GameObject)(Instantiate (tile, new Vector3 (x, y, 0), Quaternion.identity));
 				} else {
-					tileSpriteRenderer.sprite = blankTile;
+//					tileSpriteRenderer.sprite = blankTile;
+					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
 				}
-				tiles [x, y] = (GameObject)(Instantiate (tile, new Vector3 (x, y, 0), Quaternion.identity));
+
 				tiles [x, y].GetComponent<tileStuff> ().setIsPlatform (isPlatform);
             }
         }
