@@ -34,5 +34,9 @@ public class elevCatControl : allCatsControl {
 			currI = newI;
 			currJ = newJ;
 		}
+		if (transform.parent == null) {
+			Vector2 tileSpot = new Vector2 (newI, newJ - gridCont.tileSize / 3);
+			transform.position = Vector2.MoveTowards (transform.position, tileSpot, 0.2f);
+		}
 	}
 }

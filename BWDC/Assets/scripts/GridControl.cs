@@ -13,9 +13,11 @@ public class GridControl : MonoBehaviour {
 	private Sprite blockSprite;
 	public GameObject blankTile;
     public TextAsset levelCsv;
+	public float tileSize { get; set; }
 
     // Use this for initialization
     void Start () {
+		tileSize = 1f;
 
        // TextAsset levelCsv = (TextAsset)Resources.Load("level", typeof(TextAsset));
 		tileSpriteRenderer = tile.GetComponent<SpriteRenderer> ();
@@ -40,7 +42,7 @@ public class GridControl : MonoBehaviour {
 				tiles [x, y].GetComponent<tileStuff> ().setIsPlatform (isPlatform);
             }
         }
-		tileSpriteRenderer.sprite = blockSprite;
+//		tileSpriteRenderer.sprite = blockSprite;
 	}
 
 	void Update(){

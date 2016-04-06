@@ -10,26 +10,30 @@ public class movment : MonoBehaviour {
 
 
     Vector3 dest;
-    float walkSpeed = 0.2f;
+    float walkSpeed = 0.07f;
     GridControl gridCont;
 	private GameObject[,] tiles;
-	private float tileSize = 1f;
 	private bool facingRight = true;
 	private int boyTileI;
 	private int boyTileJ;
 	private int tileWidth;
 	private int tileHeight;
-	private bool newDestIsValid = true;
+//	private bool newDestIsValid = true;
 	private Vector3 camPos;
 
 	public GameObject elevCatPrefab;
 	private bool usingElevator = false;
+	private bool falling = false;
+	private bool floating = true;
 	private bool goingUp;
 	private int elevCatLayer;
 	private int elevCatMaxJ;
 	private int elevCatMinJ;
 	public int elevCat = 1;
 	private Transform currRidingCat = null;
+
+	private float origReachedDestTime = 1f;
+	private float reachedDestTime = 1f;
 
 	// Use this for initialization
 	void Start () {
@@ -47,11 +51,7 @@ public class movment : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (facingRight) {
-			mySprite.sprite = rightSprite;
-		} else {
-			mySprite.sprite = leftSprite;
-		}
+		changeSprite ();
 		camPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		transform.position = Vector3.MoveTowards(transform.position, new Vector3(dest.x, dest.y, 0), walkSpeed);
 		boyTileI = gridCont.convertToTileCoord (transform.position.x);
@@ -66,26 +66,54 @@ public class movment : MonoBehaviour {
 //		}
         if (Input.GetMouseButtonUp(0))
         {
-			checkNewPos ();
+			if ((!falling && !floating) || (reachedDestination() && usingElevator)) {
+				checkNewPos ();
+			}
         }
-		if (!newDestIsValid || !reachedDestination()) {
+		if (!reachedDestination ()) {// || !newDestIsValid) {
 			checkDestination ();
+		} else {
+			if (falling) {
+				setFallingDest ();
+			}
 		}
 		checkSpawningCats ();
     }
 
+	private void changeSprite(){
+//		if (facingRight) {
+//			mySprite.sprite = rightSprite;
+//		} else {
+//			mySprite.sprite = leftSprite;
+//		}
+	}
+
 	private bool reachedDestination(){
 		int i = gridCont.convertToTileCoord (dest.x);
 		int j = gridCont.convertToTileCoord (dest.y);
-		return (boyTileI == i && boyTileJ == j);
+		bool ret = (boyTileI == i && boyTileJ == j);
+		if (ret) {
+//			reachedDestTime -= Time.deltaTime;
+//			if (reachedDestTime > 0f) {
+//				return false;
+//			}
+//			reachedDestTime = origReachedDestTime;
+			if (floating) {
+				falling = true;
+				floating = false;
+			} else if (falling) {
+				falling = false;
+			}
+		}
+		return ret;
 	}
 
 	private void checkSpawningCats(){
-		int nextI = boyTileI - 1;
+		int nextI = boyTileI;// - 1;
 		int nextJ = boyTileJ;
-		if (facingRight) {
-			nextI = boyTileI + 1;
-		}
+//		if (facingRight) {
+//			nextI = boyTileI + 1;
+//		}
 		//a platform cat?
 		if (Input.GetKeyUp ("1") || Input.GetMouseButtonUp(1)) {
 //			nextJ--;
@@ -93,21 +121,21 @@ public class movment : MonoBehaviour {
 				tileStuff tileScript = tiles [nextI, nextJ].GetComponent<tileStuff> ();
 				tileStuff belowTile = tiles [nextI, nextJ - 1].GetComponent < tileStuff> ();
 				if (reachedDestination () && !belowTile.getHasElevCat() && !tileScript.getIsPlatform() && !tileScript.getHasElevCat()) {
-					tileScript.placeCat (elevCat, elevCatPrefab, tileSize);
+					tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
 				}
 			}
 		}
 	}
 
 	private void checkNewPos(){
-		newDestIsValid = false;
+//		newDestIsValid = false;
 		tileStuff tileScript;
 		int i = gridCont.convertToTileCoord (camPos.x);
 		int j = gridCont.convertToTileCoord (transform.position.y);
 		int checkVertj = gridCont.convertToTileCoord(camPos.y);
 		tileScript = tiles [i, checkVertj].GetComponent<tileStuff> ();
 //		if (!tileScript.hasACat ()) { //don't want player to move if despawning a cat;
-		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.down, tileSize, elevCatLayer);
+		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.down, gridCont.tileSize, elevCatLayer);
 		if (hit.collider != null){
 			//check vertical movement
 			if (i == boyTileI && checkVertj != boyTileJ) {
@@ -153,32 +181,64 @@ public class movment : MonoBehaviour {
 	}
 
 	private void checkDestination (){
-		if (reachedDestination()){
-			newDestIsValid = true;
-			return;
-		}
-		int nextI = boyTileI;
-		int nextJ = boyTileJ;
-		if (!usingElevator) {
-			if (facingRight) {
-				nextI++;
+//		if (reachedDestination()){
+//			if (!falling) {
+////				newDestIsValid = true;
+//			} else {
+//				Debug.Log ("set falling bruhh");
+//				setFallingDest (boyTileI, boyTileJ);
+//			}
+//			return;
+//		}
+		if (!floating && !falling) {
+			int nextI = boyTileI;
+			int nextJ = boyTileJ;
+			if (!usingElevator) {
+				if (facingRight) {
+					nextI++;
+				} else {
+					nextI--;
+				}
 			} else {
-				nextI--;
-			}
-		} else {
-			nextI = boyTileI;
-			if (goingUp) {
-				nextJ++;
-			} else {
+				nextI = boyTileI;
+				if (goingUp) {
+					nextJ++;
+				} else {
 //				nextJ -= 2;
-				nextJ--;
+					nextJ--;
+				}
+			}
+			if (!destIsValidTile (nextI, nextJ)) {
+				dest = new Vector3 (boyTileI, boyTileJ, 0f);
+			} else {
+//				newDestIsValid = true;
 			}
 		}
-		if (!destIsValidTile (nextI, nextJ)) {
-			dest = new Vector3 (boyTileI, boyTileJ, 0f);
-		} else {
-			newDestIsValid = true;
+	}
+
+	private bool setFallingDest(){
+		int i = boyTileI;
+		int j = boyTileJ;
+		Debug.Log (boyTileI + " " + i + " " + j + " falling");
+		bool foundPlat = false;
+		tileStuff tileScript;
+		while (!foundPlat) {
+			if (!onGrid (i, j)) {
+				return false;
+			}
+			tileScript = tiles [i, j].GetComponent<tileStuff> ();
+			if (tileScript.getHasElevCat ()) {
+				dest = new Vector3 (i, j, 0f);
+				Debug.Log ("found falling dest on cat: " + dest);
+				return true;
+			} else if (tileScript.getIsPlatform ()) {
+				dest = new Vector3 (i, j + 1, 0f);
+				Debug.Log ("found falling dest on plat: " + dest);
+				return true;
+			}
+			j--;
 		}
+		return true;
 	}
 
 	private bool destIsValidTile(int nextI, int nextJ){
@@ -197,8 +257,10 @@ public class movment : MonoBehaviour {
 			if (onGrid (nextI, checkIsPlatJ)) {
 				tileScript = tiles [nextI, checkIsPlatJ].GetComponent<tileStuff> ();
 				if (!tileScript.getIsPlatform ()) {
-					Debug.Log (nextI + " " + checkIsPlatJ + " cannotStandOn");
-					return false;
+					dest = new Vector3 (nextI, nextJ, 0f);
+//					setFallingDest (nextI, checkIsPlatJ);
+					floating = true;
+					return true;
 				}
 			} else {
 				return false;
