@@ -3,10 +3,12 @@ using System.Collections;
 
 public class elevCatControl : allCatsControl {
 
-	private GridControl gridCont;
-	private GameObject[,] tiles;
-	private int currI;
-	private int currJ;
+//	private GridControl gridCont;
+//	private GameObject[,] tiles;
+//	private int currI;
+//	private int currJ;
+//	private int newI;
+//	private int newJ;
 	private int jRange;
 	public int maxJ { get; set; }
 	public int minJ { get; set; }
@@ -16,28 +18,34 @@ public class elevCatControl : allCatsControl {
 
 	// Use this for initialization
 	void Start () {
-		gridCont = Camera.main.GetComponent<GridControl>();
-		tiles = gridCont.tiles;
-		currI = gridCont.convertToTileCoord (transform.position.x);
-		currJ = gridCont.convertToTileCoord (transform.position.y);
+//		gridCont = Camera.main.GetComponent<GridControl>();
+//		tiles = gridCont.tiles;
+//		currI = gridCont.convertToTileCoord (transform.position.x);
+//		currJ = gridCont.convertToTileCoord (transform.position.y);
+		base.initialize();
 		jRange = 3;
 		maxJ = currJ + jRange;
 		minJ = currJ - jRange;
 		moving = false;
 	}
+
+//	private override void initialize(){
+//		base.
+//	}
 	
 	// Update is called once per frame
 	void Update () {
-		int newI = gridCont.convertToTileCoord (transform.position.x);
-		int newJ = gridCont.convertToTileCoord (transform.position.y);
-		if (newI != currI || newJ != currJ) {
-			tileStuff tileScript = tiles [newI, newJ].GetComponent<tileStuff> ();
-			tileScript.setElevCat (transform.gameObject);
-			tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
-			tileScript.setElevCat (null);
-			currI = newI;
-			currJ = newJ;
-		}
+//		newI = gridCont.convertToTileCoord (transform.position.x);
+//		newJ = gridCont.convertToTileCoord (transform.position.y);
+//		if (newI != currI || newJ != currJ) {
+//			tileStuff tileScript = tiles [newI, newJ].GetComponent<tileStuff> ();
+//			tileScript.setElevCat (transform.gameObject);
+//			tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
+//			tileScript.setElevCat (null);
+//			currI = newI;
+//			currJ = newJ;
+//		}
+		base.updateTilePos();
 		checkMoving (newI, newJ);
 		if (moving) {
 			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
@@ -47,6 +55,15 @@ public class elevCatControl : allCatsControl {
 				transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
 			}
 		}
+	}
+
+	protected override void updateTiles (){
+		tileStuff tileScript = tiles [newI, newJ].GetComponent<tileStuff> ();
+		tileScript.setElevCat (transform.gameObject);
+		tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
+		tileScript.setElevCat (null);
+		currI = newI;
+		currJ = newJ;
 	}
 
 	private void checkMoving(int i, int j){

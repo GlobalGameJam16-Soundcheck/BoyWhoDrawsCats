@@ -32,6 +32,7 @@ public class tileStuff : MonoBehaviour {
 			float x = transform.position.x;
 			float y = transform.position.y;
 			elevCatObj = (GameObject)(Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
+			setElevCat (elevCatObj);
 //			isPlatform = true;
 //			canRemoveCat = true;
 //			GetComponent<SpriteRenderer> ().color = new Color(126f, 243f, 57f, 0.5f);
