@@ -25,7 +25,7 @@ public class GridControl : MonoBehaviour {
 
         string[,] tempTiles = CSVReader.SplitCsvGrid(levelCsv.text);
         tilesWidth = tempTiles.GetLength(0);
-        tilesHeight = tempTiles.GetLength(1);
+        tilesHeight = tempTiles.GetLength(1) - 1;
 		tiles = new GameObject[tilesWidth,tilesHeight];
         for (int x = 0; x < tilesWidth; x++) {
             for(int y = 0; y < tilesHeight; y++) {
@@ -34,9 +34,15 @@ public class GridControl : MonoBehaviour {
 //					tileSpriteRenderer.sprite = blockSprite;
 					isPlatform = true;
 					tiles [x, y] = (GameObject)(Instantiate (tile, new Vector3 (x, y, 0), Quaternion.identity));
+					if (y == 0) {
+						Debug.Log ("y is 0, not blanks");
+					}
 				} else {
 //					tileSpriteRenderer.sprite = blankTile;
 					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
+					if (y == 0) {
+						Debug.Log ("y is 0, blank tile");
+					}
 				}
 
 				tiles [x, y].GetComponent<tileStuff> ().setIsPlatform (isPlatform);

@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class movment : MonoBehaviour {
-	
+
+	//note all the i's and j's are really x and y coordinates
+
     public GameObject highlight;
 	private SpriteRenderer mySprite;
 	public Sprite leftSprite;
@@ -10,7 +12,7 @@ public class movment : MonoBehaviour {
 
 
     Vector3 dest;
-    float walkSpeed = 0.07f;
+    private float walkSpeed = 0.07f;
     GridControl gridCont;
 	private GameObject[,] tiles;
 	private bool facingRight = true;
@@ -56,6 +58,7 @@ public class movment : MonoBehaviour {
 		transform.position = Vector3.MoveTowards(transform.position, new Vector3(dest.x, dest.y, 0), walkSpeed);
 		boyTileI = gridCont.convertToTileCoord (transform.position.x);
 		boyTileJ = gridCont.convertToTileCoord (transform.position.y);
+//		Debug.Log("bti: " + boyTileI + " btj: " + boyTileJ);
 //		if (Input.GetMouseButtonDown (0)) {
 //			int mouseI = convertToTileCoord (camPos.x);
 //			int mouseJ = convertToTileCoord (camPos.y);
@@ -134,11 +137,13 @@ public class movment : MonoBehaviour {
 		int j = gridCont.convertToTileCoord (transform.position.y);
 		int checkVertj = gridCont.convertToTileCoord(camPos.y);
 		tileScript = tiles [i, checkVertj].GetComponent<tileStuff> ();
+		bool moveElevCat = false;
 //		if (!tileScript.hasACat ()) { //don't want player to move if despawning a cat;
 		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.down, gridCont.tileSize, elevCatLayer);
 		if (hit.collider != null){
 			//check vertical movement
 			if (i == boyTileI && checkVertj != boyTileJ) {
+				Debug.Log ("i : " + i + " checkVertJ: " + checkVertj + " boyTileI: " + boyTileI + " boyTileJ: " + boyTileJ);
 				//player is trying to move up or down with elev cat
 				Debug.Log("player trying to move up");
 				j = checkVertj;
@@ -161,35 +166,45 @@ public class movment : MonoBehaviour {
 				currRidingCat.parent = null;
 				currRidingCat = null;
 			}
+			moveElevCat = searchingForElevCatToMoveToClick (i, checkVertj);
 		}
-		Debug.Log ("xPos: " + i + " yPos: " + j);
-		Vector3 potential = new Vector3 (i, j, 0);
-		if (boyTileI == i) {
-			if (usingElevator) {
-				goingUp = (j > boyTileJ);
+		if (!moveElevCat) {
+			Debug.Log ("xPos: " + i + " yPos: " + j);
+			Vector3 potential = new Vector3 (i, j, 0);
+			if (boyTileI == i) {
+				if (usingElevator) {
+					goingUp = (j > boyTileJ);
+				}
+				if (boyTileJ == checkVertj) {
+					facingRight = !facingRight;
+				}
+			} else {
+				facingRight = (i > boyTileI);
 			}
-			if (boyTileJ == checkVertj) {
-				facingRight = !facingRight;
-			}
-		} else {
-			facingRight = (i > boyTileI);
+			dest = potential;
+			Debug.Log ("dest: " + dest + " curr:" + transform.position);
 		}
-		dest = potential;
-		Debug.Log ("dest: " + dest + " curr:" + transform.position);
 		highlight.transform.position = new Vector3 (gridCont.convertToTileCoord (camPos.x), gridCont.convertToTileCoord (camPos.y), 0f);
-//		}
+	}
+
+	private bool searchingForElevCatToMoveToClick(int clickedI, int clickedJ){
+		if (clickedI == boyTileI) {
+			//vertical
+			RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.up, Mathf.Infinity, elevCatLayer);
+			if (hit != null) {
+				Debug.Log ("fuck you: " + hit);
+//				Debug.Break ();
+				elevCatControl ecc = hit.transform.GetComponent<elevCatControl> ();
+				if (clickedJ <= ecc.maxJ && clickedJ >= ecc.minJ) {
+					ecc.moveTo (clickedI, clickedJ);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private void checkDestination (){
-//		if (reachedDestination()){
-//			if (!falling) {
-////				newDestIsValid = true;
-//			} else {
-//				Debug.Log ("set falling bruhh");
-//				setFallingDest (boyTileI, boyTileJ);
-//			}
-//			return;
-//		}
 		if (!floating && !falling) {
 			int nextI = boyTileI;
 			int nextJ = boyTileJ;
