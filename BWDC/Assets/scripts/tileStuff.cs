@@ -6,7 +6,8 @@ public class tileStuff : MonoBehaviour {
 	public bool isPlatform = false;
 	public bool canRemoveCat = false;
 
-	public bool hasElevCat = false;
+//	public bool hasElevCat = false;
+	public GameObject elevCatObj { get; set; }
 	public int elevCat = 1; //?
 
 	public void setIsPlatform(bool isPlat){
@@ -27,26 +28,31 @@ public class tileStuff : MonoBehaviour {
 
 	public void placeCat(int type, GameObject cat, float tileSize){
 		if (type == elevCat) {
-			hasElevCat = true;
+//			hasElevCat = true;
 			float x = transform.position.x;
 			float y = transform.position.y;
-			Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity);
+			elevCatObj = (GameObject)(Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
 //			isPlatform = true;
 //			canRemoveCat = true;
 //			GetComponent<SpriteRenderer> ().color = new Color(126f, 243f, 57f, 0.5f);
 		}
 	}
 
-	public void setHasElevCat(bool b){
-		hasElevCat = b;
+	public void setElevCat(GameObject cat){
+		elevCatObj = cat;
+		if (elevCatObj != null) {
+			canRemoveCat = true;
+		} else {
+			canRemoveCat = false;
+		}
 	}
 
-	public bool getHasElevCat(){
-		return hasElevCat;
+	public GameObject getElevCat(){
+		return elevCatObj;
 	}
 
 	public bool hasACat(){
-		return hasElevCat;
+		return (elevCatObj != null);
 	}
 	
 //	public void removePlacedCat(){

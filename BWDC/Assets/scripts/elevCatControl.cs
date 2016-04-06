@@ -32,9 +32,9 @@ public class elevCatControl : allCatsControl {
 		int newJ = gridCont.convertToTileCoord (transform.position.y);
 		if (newI != currI || newJ != currJ) {
 			tileStuff tileScript = tiles [newI, newJ].GetComponent<tileStuff> ();
-			tileScript.setHasElevCat (true);
+			tileScript.setElevCat (transform.gameObject);
 			tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
-			tileScript.setHasElevCat (false);
+			tileScript.setElevCat (null);
 			currI = newI;
 			currJ = newJ;
 		}

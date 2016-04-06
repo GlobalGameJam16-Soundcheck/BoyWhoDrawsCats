@@ -123,7 +123,7 @@ public class movment : MonoBehaviour {
 			if (onGrid (nextI, nextJ - 1)) {
 				tileStuff tileScript = tiles [nextI, nextJ].GetComponent<tileStuff> ();
 				tileStuff belowTile = tiles [nextI, nextJ - 1].GetComponent < tileStuff> ();
-				if (reachedDestination () && !belowTile.getHasElevCat() && !tileScript.getIsPlatform() && !tileScript.getHasElevCat()) {
+				if (reachedDestination () && !tileScript.getIsPlatform() && (tileScript.getElevCat() == null)) {
 					tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
 				}
 			}
@@ -139,17 +139,19 @@ public class movment : MonoBehaviour {
 		tileScript = tiles [i, checkVertj].GetComponent<tileStuff> ();
 		bool moveElevCat = false;
 //		if (!tileScript.hasACat ()) { //don't want player to move if despawning a cat;
-		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.down, gridCont.tileSize, elevCatLayer);
-		if (hit.collider != null){
+//		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.down, gridCont.tileSize, elevCatLayer);
+//		if (hit.collider != null){
+		GameObject elevCatObj = tiles[boyTileI, boyTileJ].GetComponent<tileStuff>().getElevCat();
+		if (elevCatObj != null) {
 			//check vertical movement
 			if (i == boyTileI && checkVertj != boyTileJ) {
 				Debug.Log ("i : " + i + " checkVertJ: " + checkVertj + " boyTileI: " + boyTileI + " boyTileJ: " + boyTileJ);
 				//player is trying to move up or down with elev cat
 				Debug.Log("player trying to move up");
 				j = checkVertj;
-				currRidingCat = hit.transform;
+				currRidingCat = elevCatObj.transform;
 				currRidingCat.SetParent (transform);
-				elevCatControl ecc = hit.transform.GetComponent<elevCatControl> ();
+				elevCatControl ecc = elevCatObj.transform.GetComponent<elevCatControl> ();
 				elevCatMaxJ = ecc.maxJ;
 				elevCatMinJ = ecc.minJ;
 				usingElevator = true;
@@ -190,15 +192,35 @@ public class movment : MonoBehaviour {
 	private bool searchingForElevCatToMoveToClick(int clickedI, int clickedJ){
 		if (clickedI == boyTileI) {
 			//vertical
-			RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.up, Mathf.Infinity, elevCatLayer);
-			if (hit != null) {
-				Debug.Log ("fuck you: " + hit);
-//				Debug.Break ();
-				elevCatControl ecc = hit.transform.GetComponent<elevCatControl> ();
-				if (clickedJ <= ecc.maxJ && clickedJ >= ecc.minJ) {
-					ecc.moveTo (clickedI, clickedJ);
+//			RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.up, Mathf.Infinity, elevCatLayer);
+//			if (hit != null) {
+//				Debug.Log ("fuck you: " + hit);
+////				Debug.Break ();
+//				elevCatControl ecc = hit.transform.GetComponent<elevCatControl> ();
+//				if (clickedJ <= ecc.maxJ && clickedJ >= ecc.minJ) {
+//					ecc.moveTo (clickedI, clickedJ);
+//					return true;
+//				}
+//			}
+			bool foundElevCat = false;
+			int checkJ = boyTileJ;
+			tileStuff tileScript;
+			GameObject elevCatObj;
+			while (onGrid (clickedI, checkJ)) {
+				tileScript = tiles [clickedI, checkJ].GetComponent<tileStuff> ();
+				elevCatObj = tileScript.getElevCat ();
+				if (elevCatObj != null) {
+					elevCatControl ecc = elevCatObj.transform.GetComponent<elevCatControl> ();
+					int jToMoveTo = clickedJ;
+					if (clickedJ > ecc.maxJ) {
+						jToMoveTo = ecc.maxJ;
+					} else if (clickedJ < ecc.minJ) {
+						jToMoveTo = ecc.minJ;
+					}
+					ecc.moveTo (clickedI, jToMoveTo);
 					return true;
 				}
+				checkJ++;
 			}
 		}
 		return false;
@@ -242,7 +264,7 @@ public class movment : MonoBehaviour {
 				return false;
 			}
 			tileScript = tiles [i, j].GetComponent<tileStuff> ();
-			if (tileScript.getHasElevCat ()) {
+			if (tileScript.getElevCat () != null) {
 				dest = new Vector3 (i, j, 0f);
 				Debug.Log ("found falling dest on cat: " + dest);
 				return true;
@@ -265,7 +287,7 @@ public class movment : MonoBehaviour {
 			if (tileScript.getIsPlatform ()) {
 				return false;
 			}
-			if (tileScript.getHasElevCat ()) {
+			if (tileScript.getElevCat () != null) {
 				return true;
 			}
 			int checkIsPlatJ = nextJ - 1;
@@ -287,6 +309,10 @@ public class movment : MonoBehaviour {
 			}
 			//fixme use an elev cat counter?
 			if (tileScript.getIsPlatform ()) {
+				return false;
+			}
+			GameObject elevCatObj = tileScript.getElevCat ();
+			if (elevCatObj != null && !elevCatObj.Equals(currRidingCat.gameObject)) {
 				return false;
 			}
 			return true;
