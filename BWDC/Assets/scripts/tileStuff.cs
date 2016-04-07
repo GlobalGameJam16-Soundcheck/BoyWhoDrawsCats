@@ -6,9 +6,14 @@ public class tileStuff : MonoBehaviour {
 	public bool isPlatform = false;
 	public bool canRemoveCat = false;
 
-//	public bool hasElevCat = false;
+	//[Header("ElevatorCat")]
 	public GameObject elevCatObj { get; set; }
 	public int elevCat = 1; //?
+
+	//[Header("AttackCat")]
+	public GameObject attackCatObj { get; set; }
+	public int attackCat = 2;
+	public int attackCatSpawnLeft = 3;
 
 	public void setIsPlatform(bool isPlat){
 		isPlatform = isPlat;
@@ -27,25 +32,34 @@ public class tileStuff : MonoBehaviour {
 //	}
 
 	public void placeCat(int type, GameObject cat, float tileSize){
+		float x = transform.position.x;
+		float y = transform.position.y;
 		if (type == elevCat) {
-//			hasElevCat = true;
-			float x = transform.position.x;
-			float y = transform.position.y;
 			elevCatObj = (GameObject)(Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
 			setElevCat (elevCatObj);
-//			isPlatform = true;
-//			canRemoveCat = true;
-//			GetComponent<SpriteRenderer> ().color = new Color(126f, 243f, 57f, 0.5f);
+		} else if (type == attackCat) {
+			attackCatObj = (GameObject)(Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
+			setAttackCat (attackCatObj);
+			attackCatObj.GetComponent<attackCatControl> ().setFacingRight (true);
+		} else if (type == attackCatSpawnLeft) {
+			attackCatObj = (GameObject)(Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
+			setAttackCat (attackCatObj);
+			attackCatObj.GetComponent<attackCatControl> ().setFacingRight (false);
 		}
+	}
+
+	public void setAttackCat(GameObject cat){
+		attackCatObj = cat;
+		checkCanRemoveCat ();
 	}
 
 	public void setElevCat(GameObject cat){
 		elevCatObj = cat;
-		if (elevCatObj != null) {
-			canRemoveCat = true;
-		} else {
-			canRemoveCat = false;
-		}
+		checkCanRemoveCat ();
+	}
+
+	private void checkCanRemoveCat(){
+		canRemoveCat = (elevCatObj != null || attackCatObj != null);
 	}
 
 	public GameObject getElevCat(){
@@ -53,7 +67,7 @@ public class tileStuff : MonoBehaviour {
 	}
 
 	public bool hasACat(){
-		return (elevCatObj != null);
+		return (elevCatObj != null && attackCatObj != null);
 	}
 	
 //	public void removePlacedCat(){

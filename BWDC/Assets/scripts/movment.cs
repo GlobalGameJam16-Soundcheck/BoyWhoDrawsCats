@@ -23,6 +23,7 @@ public class movment : MonoBehaviour {
 //	private bool newDestIsValid = true;
 	private Vector3 camPos;
 
+	[Header("ElevatorCat")]
 	public GameObject elevCatPrefab;
 	private bool usingElevator = false;
 	private bool falling = false;
@@ -34,8 +35,9 @@ public class movment : MonoBehaviour {
 	public int elevCat = 1;
 	private Transform currRidingCat = null;
 
-	private float origReachedDestTime = 1f;
-	private float reachedDestTime = 1f;
+	[Header("AttackCat")]
+	public GameObject attackCatPrefab;
+	public int attackCat = 2;
 
 	// Use this for initialization
 	void Start () {
@@ -73,7 +75,7 @@ public class movment : MonoBehaviour {
 				checkNewPos ();
 			}
         }
-		if (!reachedDestination ()) {// || !newDestIsValid) {
+		if (!reachedDestination ()) {
 			checkDestination ();
 		} else {
 			if (falling) {
@@ -84,11 +86,7 @@ public class movment : MonoBehaviour {
     }
 
 	private void changeSprite(){
-//		if (facingRight) {
-//			mySprite.sprite = rightSprite;
-//		} else {
-//			mySprite.sprite = leftSprite;
-//		}
+
 	}
 
 	private bool reachedDestination(){
@@ -96,11 +94,6 @@ public class movment : MonoBehaviour {
 		int j = gridCont.convertToTileCoord (dest.y);
 		bool ret = (boyTileI == i && boyTileJ == j);
 		if (ret) {
-//			reachedDestTime -= Time.deltaTime;
-//			if (reachedDestTime > 0f) {
-//				return false;
-//			}
-//			reachedDestTime = origReachedDestTime;
 			if (floating) {
 				falling = true;
 				floating = false;
@@ -112,22 +105,41 @@ public class movment : MonoBehaviour {
 	}
 
 	private void checkSpawningCats(){
-		int nextI = boyTileI;// - 1;
-		int nextJ = boyTileJ;
+//		int nextI = boyTileI;// - 1;
+//		int nextJ = boyTileJ;
 //		if (facingRight) {
 //			nextI = boyTileI + 1;
 //		}
 		//a platform cat?
-		if (Input.GetKeyUp ("1") || Input.GetMouseButtonUp(1)) {
+		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
+		tileStuff belowTile = tiles [boyTileI, boyTileJ - 1].GetComponent < tileStuff> ();
+		if (reachedDestination () && !tileScript.getIsPlatform ()) {
+			if (spawningElevCat ()) {
 //			nextJ--;
-			if (onGrid (nextI, nextJ - 1)) {
-				tileStuff tileScript = tiles [nextI, nextJ].GetComponent<tileStuff> ();
-				tileStuff belowTile = tiles [nextI, nextJ - 1].GetComponent < tileStuff> ();
-				if (reachedDestination () && !tileScript.getIsPlatform() && (tileScript.getElevCat() == null)) {
+//			if (gridCont.onGrid (nextI, nextJ - 1)) {
+				if (tileScript.getElevCat () == null) {
 					tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
 				}
+//			}
+			} else if (spawningAttackCat ()) {
+				tileScript.placeCat (attackCat, attackCatPrefab, gridCont.tileSize);
 			}
 		}
+	}
+
+	private bool spawningAttackCat(){
+		if (Input.GetKeyUp ("2")) {
+			attackCat = 2;
+			return true;
+		} else if (Input.GetKeyUp ("3")) {
+			attackCat = 3;
+			return true;
+		}
+		return false;
+	}
+
+	private bool spawningElevCat(){
+		return (Input.GetKeyUp ("1") || Input.GetMouseButtonUp (1));
 	}
 
 	private void checkNewPos(){
@@ -206,7 +218,7 @@ public class movment : MonoBehaviour {
 			int checkJ = boyTileJ;
 			tileStuff tileScript;
 			GameObject elevCatObj;
-			while (onGrid (clickedI, checkJ)) {
+			while (gridCont.onGrid (clickedI, checkJ)) {
 				tileScript = tiles [clickedI, checkJ].GetComponent<tileStuff> ();
 				elevCatObj = tileScript.getElevCat ();
 				if (elevCatObj != null) {
@@ -260,7 +272,7 @@ public class movment : MonoBehaviour {
 		bool foundPlat = false;
 		tileStuff tileScript;
 		while (!foundPlat) {
-			if (!onGrid (i, j)) {
+			if (!gridCont.onGrid (i, j)) {
 				return false;
 			}
 			tileScript = tiles [i, j].GetComponent<tileStuff> ();
@@ -279,7 +291,7 @@ public class movment : MonoBehaviour {
 	}
 
 	private bool destIsValidTile(int nextI, int nextJ){
-		if (!onGrid (nextI, nextJ)) {
+		if (!gridCont.onGrid (nextI, nextJ)) {
 			return false;
 		}
 		tileStuff tileScript = tiles [nextI, nextJ].GetComponent<tileStuff> ();
@@ -291,7 +303,7 @@ public class movment : MonoBehaviour {
 				return true;
 			}
 			int checkIsPlatJ = nextJ - 1;
-			if (onGrid (nextI, checkIsPlatJ)) {
+			if (gridCont.onGrid (nextI, checkIsPlatJ)) {
 				tileScript = tiles [nextI, checkIsPlatJ].GetComponent<tileStuff> ();
 				if (!tileScript.getIsPlatform ()) {
 					dest = new Vector3 (nextI, nextJ, 0f);
@@ -317,10 +329,6 @@ public class movment : MonoBehaviour {
 			}
 			return true;
 		}
-	}
-
-	private bool onGrid(int i, int j){
-		return (0 <= i && 0 <= j && i < tileWidth && j < tileHeight);
 	}
 
 }

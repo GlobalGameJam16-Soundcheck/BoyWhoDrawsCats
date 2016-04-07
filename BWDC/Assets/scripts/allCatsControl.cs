@@ -5,10 +5,12 @@ public class allCatsControl : MonoBehaviour {
 
 	protected GridControl gridCont;
 	protected GameObject[,] tiles;
+	protected Vector2 tileSpot;
 	protected int currI;
 	protected int currJ;
 	protected int newI;
 	protected int newJ;
+	protected float moveSpeed;
 
 //	// Use this for initialization
 	void Start () {
@@ -22,6 +24,7 @@ public class allCatsControl : MonoBehaviour {
 		currJ = gridCont.convertToTileCoord (transform.position.y);
 		newI = currI;
 		newJ = currJ;
+		moveSpeed = 0.07f;
 	}
 	
 	// Update is called once per frame
