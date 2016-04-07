@@ -69,6 +69,17 @@ public class tileStuff : MonoBehaviour {
 	public bool hasACat(){
 		return (elevCatObj != null && attackCatObj != null);
 	}
+
+	public void deleteAllCats(){
+		if (elevCatObj != null) {
+			Destroy (elevCatObj);
+			setElevCat (null);
+		}
+		if (attackCatObj != null) {
+			Destroy (attackCatObj);
+			setAttackCat (null);
+		}
+	}
 	
 //	public void removePlacedCat(){
 //		isPlatform = false;

@@ -6,9 +6,10 @@ public class movment : MonoBehaviour {
 	//note all the i's and j's are really x and y coordinates
 
     public GameObject highlight;
-	private SpriteRenderer mySprite;
-	public Sprite leftSprite;
-	private Sprite rightSprite;
+	public GameObject deleteLight;
+//	private SpriteRenderer mySprite;
+//	public Sprite leftSprite;
+//	private Sprite rightSprite;
 
 
     Vector3 dest;
@@ -29,7 +30,7 @@ public class movment : MonoBehaviour {
 	private bool falling = false;
 	private bool floating = true;
 	private bool goingUp;
-	private int elevCatLayer;
+//	private int elevCatLayer;
 	private int elevCatMaxJ;
 	private int elevCatMinJ;
 	public int elevCat = 1;
@@ -42,15 +43,15 @@ public class movment : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gridCont = Camera.main.GetComponent<GridControl>();
-		elevCatLayer = 1 << (LayerMask.NameToLayer ("elevCat"));
+//		elevCatLayer = 1 << (LayerMask.NameToLayer ("elevCat"));
 		tiles = gridCont.tiles;
 		tileWidth = tiles.GetLength (0);
 		tileHeight = tiles.GetLength (1);
 		int xPos = gridCont.convertToTileCoord(transform.position.x);
 		int yPos = gridCont.convertToTileCoord(transform.position.y);
 		dest = new Vector3 (xPos, yPos, 0f);
-		mySprite = GetComponent<SpriteRenderer> ();
-		rightSprite = mySprite.sprite;
+//		mySprite = GetComponent<SpriteRenderer> ();
+//		rightSprite = mySprite.sprite;
     }
 	
 	// Update is called once per frame
@@ -69,8 +70,7 @@ public class movment : MonoBehaviour {
 //				tileScript.removePlacedCat ();
 //			}
 //		}
-        if (Input.GetMouseButtonUp(0))
-        {
+        if (Input.GetMouseButtonUp(0)) {
 			if ((!falling && !floating) || (reachedDestination() && usingElevator)) {
 				checkNewPos ();
 			}
@@ -82,6 +82,7 @@ public class movment : MonoBehaviour {
 				setFallingDest ();
 			}
 		}
+		checkDeletingCats ();
 		checkSpawningCats ();
     }
 
@@ -104,6 +105,29 @@ public class movment : MonoBehaviour {
 		return ret;
 	}
 
+	private void checkDeletingCats(){
+		if (Input.GetMouseButtonUp(1)){
+			int clickedI = gridCont.convertToTileCoord (camPos.x);
+			int clickedJ = gridCont.convertToTileCoord (camPos.y);
+			if (gridCont.onGrid(clickedI, clickedJ)){
+				tileStuff tileScript = tiles [clickedI, clickedJ].GetComponent<tileStuff>();
+				deleteLight.transform.position = new Vector2 (clickedI, clickedJ);
+				tileScript.deleteAllCats ();
+				if (clickedI == boyTileI && clickedJ == boyTileJ) {
+					int lowerJ = boyTileJ - 1;
+					if (gridCont.onGrid (clickedI, lowerJ)) {
+						tileStuff belowTile = tiles [clickedI, lowerJ].GetComponent<tileStuff> ();
+						if (tileScript.getElevCat () == null && !belowTile.getIsPlatform()) {
+							floating = true;
+							dest = new Vector3 (clickedI, lowerJ, 0f);
+							Debug.Log ("new dest gotta float no more elev cat");
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private void checkSpawningCats(){
 //		int nextI = boyTileI;// - 1;
 //		int nextJ = boyTileJ;
@@ -112,7 +136,7 @@ public class movment : MonoBehaviour {
 //		}
 		//a platform cat?
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
-		tileStuff belowTile = tiles [boyTileI, boyTileJ - 1].GetComponent < tileStuff> ();
+//		tileStuff belowTile = tiles [boyTileI, boyTileJ - 1].GetComponent < tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			if (spawningElevCat ()) {
 //			nextJ--;
@@ -139,7 +163,7 @@ public class movment : MonoBehaviour {
 	}
 
 	private bool spawningElevCat(){
-		return (Input.GetKeyUp ("1") || Input.GetMouseButtonUp (1));
+		return (Input.GetKeyUp ("1"));
 	}
 
 	private void checkNewPos(){
@@ -214,7 +238,6 @@ public class movment : MonoBehaviour {
 //					return true;
 //				}
 //			}
-			bool foundElevCat = false;
 			int checkJ = boyTileJ;
 			tileStuff tileScript;
 			GameObject elevCatObj;
