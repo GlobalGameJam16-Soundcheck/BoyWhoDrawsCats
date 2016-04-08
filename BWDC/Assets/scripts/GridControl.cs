@@ -11,13 +11,13 @@ public class GridControl : MonoBehaviour {
     public GameObject tile;
 	private Sprite blockSprite;
 	public GameObject blankTile;
+	public GameObject rat;
     public TextAsset levelCsv;
 	public float tileSize { get; set; }
 
     // Use this for initialization
     void Start () {
 		tileSize = 1f;
-
        // TextAsset levelCsv = (TextAsset)Resources.Load("level", typeof(TextAsset));
 
         string[,] tempTiles = CSVReader.SplitCsvGrid(levelCsv.text);
@@ -27,7 +27,8 @@ public class GridControl : MonoBehaviour {
         for (int x = 0; x < tileWidth; x++) {
             for(int y = 0; y < tileHeight; y++) {
 				bool isPlatform = false;
-				if (tempTiles[x, tileHeight-1 - y] == "b") {
+				string t = tempTiles [x, tileHeight - 1 - y];
+				if (t == "b") {
 					isPlatform = true;
 					tiles [x, y] = (GameObject)(Instantiate (tile, new Vector3 (x, y, 0), Quaternion.identity));
 					if (y == 0) {
@@ -37,6 +38,9 @@ public class GridControl : MonoBehaviour {
 					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
 					if (y == 0) {
 						Debug.Log ("y is 0, blank tile");
+					}
+					if (t == "r") {
+						tiles [x, y].GetComponent<tileStuff> ().placeRat (rat, tileSize);
 					}
 				}
 

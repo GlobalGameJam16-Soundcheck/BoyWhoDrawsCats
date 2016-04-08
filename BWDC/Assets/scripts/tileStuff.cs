@@ -15,6 +15,10 @@ public class tileStuff : MonoBehaviour {
 	public int attackCat = 2;
 	public int attackCatSpawnLeft = 3;
 
+	//[Header("Rat")]
+	public GameObject ratObj { get; set; }
+	public bool hasARat = false;
+
 	public void setIsPlatform(bool isPlat){
 		isPlatform = isPlat;
 	}
@@ -48,6 +52,13 @@ public class tileStuff : MonoBehaviour {
 		}
 	}
 
+	public void placeRat(GameObject rat, float tileSize){
+		float x = transform.position.x;
+		float y = transform.position.y;
+		ratObj = (GameObject)(Instantiate (rat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
+		setRat (ratObj);
+	}
+
 	public void setAttackCat(GameObject cat){
 		attackCatObj = cat;
 		checkCanRemoveCat ();
@@ -56,6 +67,11 @@ public class tileStuff : MonoBehaviour {
 	public void setElevCat(GameObject cat){
 		elevCatObj = cat;
 		checkCanRemoveCat ();
+	}
+
+	public void setRat(GameObject rat){
+		ratObj = rat;
+		hasARat = (rat != null);
 	}
 
 	private void checkCanRemoveCat(){
@@ -71,13 +87,28 @@ public class tileStuff : MonoBehaviour {
 	}
 
 	public void deleteAllCats(){
+		deleteElevCat ();
+		deleteAttackCat ();
+	}
+
+	public void deleteElevCat(){
 		if (elevCatObj != null) {
 			Destroy (elevCatObj);
 			setElevCat (null);
 		}
+	}
+
+	public void deleteAttackCat(){
 		if (attackCatObj != null) {
 			Destroy (attackCatObj);
 			setAttackCat (null);
+		}
+	}
+
+	public void deleteRat(){
+		if (ratObj != null) {
+			Destroy (ratObj);
+			setRat (null);
 		}
 	}
 	

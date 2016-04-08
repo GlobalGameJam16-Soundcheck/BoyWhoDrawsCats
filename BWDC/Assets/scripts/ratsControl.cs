@@ -1,82 +1,46 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class attackCatControl : allCatsControl {
+public class ratsControl : allCatsControl {
 
 	private bool facingRight;
 	private SpriteRenderer mySprite;
-	private bool floating;
-	private bool falling;
+	private bool started;
+	private float speedDenom;
 
 	// Use this for initialization
 	void Start () {
+		started = false;
+		Invoke ("delayedStart", 2f);
+	}
+
+	private void delayedStart(){
 		base.initialize ();
 		mySprite = GetComponent<SpriteRenderer> ();
-		floating = false;
-		falling = false;
+		speedDenom = Random.Range (1f, 10f);
+		started = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (!floating && !falling) {
+		if (started) {
+			base.updateTilePos ();
 			moveForwards ();
-		} else {
-			fallDownwards ();
+			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed / speedDenom);
 		}
-		transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed / 3);
-		changeSprite ();
-		base.updateTilePos ();
-	}
-
-	public void setFacingRight(bool fr){
-		facingRight = fr;
 	}
 
 	protected override void updateTiles(){
 		tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
-		tileScript.setAttackCat (null);
+		tileScript.setRat (null);
 		tileScript = tiles [newI, newJ].GetComponent<tileStuff> ();
-		tileScript.setAttackCat (transform.gameObject);
+		tileScript.setRat (transform.gameObject);
 		currI = newI;
 		currJ = newJ;
-		if (tileScript.ratObj != null) {
+		if (tileScript.attackCatObj != null) {
 			tileScript.deleteAttackCat ();
 			tileScript.deleteRat ();
 		}
-	}
-
-	private void changeSprite(){
-		if (facingRight) {
-			mySprite.flipX = true;
-		} else {
-			mySprite.flipX = false;
-		}
-	}
-
-	private void fallDownwards(){
-		if (floating) {
-			if (checkOnDestTile ()) {
-				floating = false;
-				falling = true;
-			}
-		} else {
-			int tileDown = currJ - 1;
-			tileStuff belowTile;
-			tileStuff tileScript;
-			if (gridCont.onGrid(currI, tileDown)){
-				belowTile = tiles [currI, tileDown].GetComponent<tileStuff> ();
-				tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
-				if (belowTile.getIsPlatform () || (tileScript.getElevCat() != null)) {
-					falling = false;
-				}
-			}
-			tileSpot = new Vector2 (currI, tileDown);
-		}
-	}
-
-	private bool checkOnDestTile(){
-		return (currI == gridCont.convertToTileCoord (tileSpot.x) &&
-				currJ == gridCont.convertToTileCoord (tileSpot.y));
 	}
 
 	private void moveForwards(){
@@ -96,7 +60,7 @@ public class attackCatControl : allCatsControl {
 				int tileDown = currJ - 1;
 				tileStuff downTile = tiles [tileOver, tileDown].GetComponent<tileStuff> ();
 				if (!downTile.getIsPlatform () && (tileScript.getElevCat() == null)) {
-					floating = true;
+					turnAround = true;
 				}
 			}
 		} else {
@@ -111,4 +75,5 @@ public class attackCatControl : allCatsControl {
 			tileSpot = new Vector2 (currI - 1, currJ);
 		}
 	}
+
 }

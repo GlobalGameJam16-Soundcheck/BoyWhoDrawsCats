@@ -35,6 +35,7 @@ public class movment : MonoBehaviour {
 	private int elevCatMinJ;
 	public int elevCat = 1;
 	private Transform currRidingCat = null;
+	private bool cannotSpawnElev = false;
 
 	[Header("AttackCat")]
 	public GameObject attackCatPrefab;
@@ -163,7 +164,7 @@ public class movment : MonoBehaviour {
 	}
 
 	private bool spawningElevCat(){
-		return (Input.GetKeyUp ("1"));
+		return (Input.GetKeyUp ("1") && !cannotSpawnElev);
 	}
 
 	private void checkNewPos(){
@@ -188,6 +189,7 @@ public class movment : MonoBehaviour {
 				currRidingCat = elevCatObj.transform;
 				currRidingCat.SetParent (transform);
 				elevCatControl ecc = elevCatObj.transform.GetComponent<elevCatControl> ();
+//				ecc.setPos (boyTileI, boyTileJ);
 				elevCatMaxJ = ecc.maxJ;
 				elevCatMinJ = ecc.minJ;
 				usingElevator = true;
@@ -228,16 +230,6 @@ public class movment : MonoBehaviour {
 	private bool searchingForElevCatToMoveToClick(int clickedI, int clickedJ){
 		if (clickedI == boyTileI) {
 			//vertical
-//			RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.up, Mathf.Infinity, elevCatLayer);
-//			if (hit != null) {
-//				Debug.Log ("fuck you: " + hit);
-////				Debug.Break ();
-//				elevCatControl ecc = hit.transform.GetComponent<elevCatControl> ();
-//				if (clickedJ <= ecc.maxJ && clickedJ >= ecc.minJ) {
-//					ecc.moveTo (clickedI, clickedJ);
-//					return true;
-//				}
-//			}
 			int checkJ = boyTileJ;
 			tileStuff tileScript;
 			GameObject elevCatObj;
@@ -252,7 +244,12 @@ public class movment : MonoBehaviour {
 					} else if (clickedJ < ecc.minJ) {
 						jToMoveTo = ecc.minJ;
 					}
-					ecc.moveTo (clickedI, jToMoveTo);
+					int elevCatMovingToJ = ecc.moveTo (clickedI, jToMoveTo);
+					if (elevCatMovingToJ == boyTileJ) {
+						cannotSpawnElev = true;
+					} else {
+						cannotSpawnElev = false;
+					}
 					return true;
 				}
 				checkJ++;
