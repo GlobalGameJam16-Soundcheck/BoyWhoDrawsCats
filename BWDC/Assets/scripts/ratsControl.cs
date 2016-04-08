@@ -28,6 +28,15 @@ public class ratsControl : allCatsControl {
 			base.updateTilePos ();
 			moveForwards ();
 			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed / speedDenom);
+			changeSprite ();
+		}
+	}
+
+	private void changeSprite(){
+		if (facingRight) {
+			mySprite.flipX = true;
+		} else {
+			mySprite.flipX = false;
 		}
 	}
 
@@ -80,10 +89,11 @@ public class ratsControl : allCatsControl {
 		if (turnAround){
 			facingRight = !facingRight;
 		}
+		float denom = 3f;
 		if (facingRight) {
-			tileSpot = new Vector2 (currI + 1, currJ);
+			tileSpot = new Vector2 (currI + 1, currJ - gridCont.tileSize / denom);
 		} else {
-			tileSpot = new Vector2 (currI - 1, currJ);
+			tileSpot = new Vector2 (currI - 1, currJ - gridCont.tileSize / denom);
 		}
 	}
 

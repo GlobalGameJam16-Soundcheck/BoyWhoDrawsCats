@@ -7,9 +7,8 @@ public class movment : MonoBehaviour {
 
     public GameObject highlight;
 	public GameObject deleteLight;
-//	private SpriteRenderer mySprite;
-//	public Sprite leftSprite;
-//	private Sprite rightSprite;
+	private float mouseHoldTimer;
+	private float origMouseHoldTimer;
 
 
     Vector3 dest;
@@ -39,6 +38,8 @@ public class movment : MonoBehaviour {
 	[Header("AttackCat")]
 	public GameObject attackCatPrefab;
 	public int attackCat = 2;
+	public int attackCatRight = 2;
+	public int attackCatLeft = 3;
 
 	// Use this for initialization
 	void Start () {
@@ -52,6 +53,8 @@ public class movment : MonoBehaviour {
 		dest = new Vector3 (xPos, yPos, 0f);
 //		mySprite = GetComponent<SpriteRenderer> ();
 //		rightSprite = mySprite.sprite;
+		mouseHoldTimer = 0.3f;
+		origMouseHoldTimer = mouseHoldTimer;
     }
 	
 	// Update is called once per frame
@@ -61,18 +64,19 @@ public class movment : MonoBehaviour {
 		transform.position = Vector3.MoveTowards(transform.position, new Vector3(dest.x, dest.y, 0), walkSpeed);
 		boyTileI = gridCont.convertToTileCoord (transform.position.x);
 		boyTileJ = gridCont.convertToTileCoord (transform.position.y);
-//		Debug.Log("bti: " + boyTileI + " btj: " + boyTileJ);
-//		if (Input.GetMouseButtonDown (0)) {
-//			int mouseI = convertToTileCoord (camPos.x);
-//			int mouseJ = convertToTileCoord (camPos.y);
-//			tileStuff tileScript = tiles [mouseI, mouseJ].GetComponent<tileStuff> ();
-//			if (tileScript.getCanRemoveCat ()) {
-//				tileScript.removePlacedCat ();
-//			}
-//		}
+		if (Input.GetMouseButton (0)) {
+			mouseHoldTimer -= Time.deltaTime;
+			Debug.Log (mouseHoldTimer);
+		}
         if (Input.GetMouseButtonUp(0)) {
-			if ((!falling && !floating) || (reachedDestination() && usingElevator)) {
-				checkNewPos ();
+			float oldMouseTimer = mouseHoldTimer;
+			mouseHoldTimer = origMouseHoldTimer;
+			if (oldMouseTimer > 0f) {
+				if ((!falling && !floating) || (reachedDestination () && usingElevator)) {
+					checkNewPos ();
+				}
+			} else {
+				Debug.Log ("must be drawing?");
 			}
         }
 		if (!reachedDestination ()) {
@@ -83,7 +87,7 @@ public class movment : MonoBehaviour {
 			}
 		}
 		checkDeletingCats ();
-		checkSpawningCats ();
+//		checkSpawningCats ();
     }
 
 	private void changeSprite(){
@@ -128,43 +132,74 @@ public class movment : MonoBehaviour {
 		}
 	}
 
-	private void checkSpawningCats(){
-//		int nextI = boyTileI;// - 1;
-//		int nextJ = boyTileJ;
-//		if (facingRight) {
-//			nextI = boyTileI + 1;
-//		}
-		//a platform cat?
+	public void spawnElevCat(){
+		bool cannotSpawn = false;
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
-//		tileStuff belowTile = tiles [boyTileI, boyTileJ - 1].GetComponent < tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
-			if (spawningElevCat ()) {
-//			nextJ--;
-//			if (gridCont.onGrid (nextI, nextJ - 1)) {
-				if (tileScript.getElevCat () == null) {
-					tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
-				}
-//			}
-			} else if (spawningAttackCat ()) {
-				tileScript.placeCat (attackCat, attackCatPrefab, gridCont.tileSize);
+			if (tileScript.getElevCat () == null) {
+				tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
+			} else {
+				cannotSpawn = true;
 			}
+		} else {
+			cannotSpawn = true;
+		}
+		if (cannotSpawn) {
+			Debug.Log ("cannot spawn, show animation or sound as to why cannot spawn");
 		}
 	}
 
-	private bool spawningAttackCat(){
-		if (Input.GetKeyUp ("2")) {
-			attackCat = 2;
-			return true;
-		} else if (Input.GetKeyUp ("3")) {
-			attackCat = 3;
-			return true;
+	public void spawnAttackCat(int ac){
+		attackCat = ac;
+		bool cannotSpawn = false;
+		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
+		if (reachedDestination () && !tileScript.getIsPlatform ()) {
+			tileScript.placeCat (attackCat, attackCatPrefab, gridCont.tileSize);
+		} else {
+			cannotSpawn = true;
 		}
-		return false;
+		if (cannotSpawn) {
+			Debug.Log ("cannot spawn, show animation or sound as to why cannot spawn");
+		}
 	}
 
-	private bool spawningElevCat(){
-		return (Input.GetKeyUp ("1"));
-	}
+//	private void checkSpawningCats(){
+////		int nextI = boyTileI;// - 1;
+////		int nextJ = boyTileJ;
+////		if (facingRight) {
+////			nextI = boyTileI + 1;
+////		}
+//		//a platform cat?
+//		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
+////		tileStuff belowTile = tiles [boyTileI, boyTileJ - 1].GetComponent < tileStuff> ();
+//		if (reachedDestination () && !tileScript.getIsPlatform ()) {
+//			if (spawningElevCat ()) {
+////			nextJ--;
+////			if (gridCont.onGrid (nextI, nextJ - 1)) {
+//				if (tileScript.getElevCat () == null) {
+//					tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
+//				}
+////			}
+//			} else if (spawningAttackCat ()) {
+//				tileScript.placeCat (attackCat, attackCatPrefab, gridCont.tileSize);
+//			}
+//		}
+//	}
+
+//	private bool spawningAttackCat(){
+//		if (Input.GetKeyUp ("2")) {
+//			attackCat = 2;
+//			return true;
+//		} else if (Input.GetKeyUp ("3")) {
+//			attackCat = 3;
+//			return true;
+//		}
+//		return false;
+//	}
+//
+//	private bool spawningElevCat(){
+//		return (Input.GetKeyUp ("1"));
+//	}
 
 	private void checkNewPos(){
 //		newDestIsValid = false;
