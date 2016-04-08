@@ -17,7 +17,8 @@ public class ratsControl : allCatsControl {
 	private void delayedStart(){
 		base.initialize ();
 		mySprite = GetComponent<SpriteRenderer> ();
-		speedDenom = Random.Range (1f, 10f);
+//		speedDenom = Random.Range (1f, 10f);
+		speedDenom = 4f;
 		started = true;
 	}
 	
@@ -55,12 +56,22 @@ public class ratsControl : allCatsControl {
 		if (gridCont.onGrid (tileOver, currJ)) {
 			tileScript = tiles [tileOver, currJ].GetComponent<tileStuff> ();
 			if (tileScript.getIsPlatform ()) {
-				turnAround = true;
+				movingTimer -= Time.deltaTime;
+				if (movingTimer < 0f) {
+					turnAround = true;
+					movingTimer = origMovingTimer;
+				}
 			} else {
 				int tileDown = currJ - 1;
 				tileStuff downTile = tiles [tileOver, tileDown].GetComponent<tileStuff> ();
-				if (!downTile.getIsPlatform () && (tileScript.getElevCat() == null)) {
-					turnAround = true;
+				if (!downTile.getIsPlatform () && (tileScript.getElevCat () == null)) {
+					movingTimer -= Time.deltaTime;
+					if (movingTimer < 0f) {
+						turnAround = true;
+						movingTimer = origMovingTimer;
+					}
+				} else {
+					movingTimer = origMovingTimer;
 				}
 			}
 		} else {

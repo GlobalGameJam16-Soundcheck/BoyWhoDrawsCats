@@ -35,7 +35,6 @@ public class movment : MonoBehaviour {
 	private int elevCatMinJ;
 	public int elevCat = 1;
 	private Transform currRidingCat = null;
-	private bool cannotSpawnElev = false;
 
 	[Header("AttackCat")]
 	public GameObject attackCatPrefab;
@@ -164,7 +163,7 @@ public class movment : MonoBehaviour {
 	}
 
 	private bool spawningElevCat(){
-		return (Input.GetKeyUp ("1") && !cannotSpawnElev);
+		return (Input.GetKeyUp ("1"));
 	}
 
 	private void checkNewPos(){
@@ -185,14 +184,23 @@ public class movment : MonoBehaviour {
 				Debug.Log ("i : " + i + " checkVertJ: " + checkVertj + " boyTileI: " + boyTileI + " boyTileJ: " + boyTileJ);
 				//player is trying to move up or down with elev cat
 				Debug.Log("player trying to move up");
-				j = checkVertj;
-				currRidingCat = elevCatObj.transform;
-				currRidingCat.SetParent (transform);
 				elevCatControl ecc = elevCatObj.transform.GetComponent<elevCatControl> ();
-//				ecc.setPos (boyTileI, boyTileJ);
-				elevCatMaxJ = ecc.maxJ;
-				elevCatMinJ = ecc.minJ;
-				usingElevator = true;
+				if (!ecc.moving) {
+					Debug.Log ("cat not moving rn");
+					j = checkVertj;
+					currRidingCat = elevCatObj.transform;
+					currRidingCat.SetParent (transform);
+					elevCatMaxJ = ecc.maxJ;
+					elevCatMinJ = ecc.minJ;
+					usingElevator = true;
+				} else {
+					Debug.Log("cat still moving hold up");
+					usingElevator = false;
+					if (currRidingCat != null) {
+						currRidingCat.parent = null;
+						currRidingCat = null;
+					}
+				}
 			} else {
 				usingElevator = false;
 				if (currRidingCat != null) {
@@ -209,7 +217,7 @@ public class movment : MonoBehaviour {
 			moveElevCat = searchingForElevCatToMoveToClick (i, checkVertj);
 		}
 		if (!moveElevCat) {
-			Debug.Log ("xPos: " + i + " yPos: " + j);
+//			Debug.Log ("xPos: " + i + " yPos: " + j);
 			Vector3 potential = new Vector3 (i, j, 0);
 			if (boyTileI == i) {
 				if (usingElevator) {
@@ -222,7 +230,7 @@ public class movment : MonoBehaviour {
 				facingRight = (i > boyTileI);
 			}
 			dest = potential;
-			Debug.Log ("dest: " + dest + " curr:" + transform.position);
+//			Debug.Log ("dest: " + dest + " curr:" + transform.position);
 		}
 		highlight.transform.position = new Vector3 (gridCont.convertToTileCoord (camPos.x), gridCont.convertToTileCoord (camPos.y), 0f);
 	}
@@ -245,11 +253,6 @@ public class movment : MonoBehaviour {
 						jToMoveTo = ecc.minJ;
 					}
 					int elevCatMovingToJ = ecc.moveTo (clickedI, jToMoveTo);
-					if (elevCatMovingToJ == boyTileJ) {
-						cannotSpawnElev = true;
-					} else {
-						cannotSpawnElev = false;
-					}
 					return true;
 				}
 				checkJ++;

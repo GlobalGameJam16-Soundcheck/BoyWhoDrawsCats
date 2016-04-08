@@ -14,6 +14,8 @@ public class attackCatControl : allCatsControl {
 		mySprite = GetComponent<SpriteRenderer> ();
 		floating = false;
 		falling = false;
+		movingTimer -= 0.1f;
+		origMovingTimer = movingTimer;
 	}
 	
 	// Update is called once per frame
@@ -91,8 +93,13 @@ public class attackCatControl : allCatsControl {
 		if (gridCont.onGrid (tileOver, currJ)) {
 			tileScript = tiles [tileOver, currJ].GetComponent<tileStuff> ();
 			if (tileScript.getIsPlatform ()) {
-				turnAround = true;
+				movingTimer -= Time.deltaTime;
+				if (movingTimer < 0f) {
+					turnAround = true;
+					movingTimer = origMovingTimer;
+				}
 			} else {
+				movingTimer = origMovingTimer;
 				int tileDown = currJ - 1;
 				tileStuff downTile = tiles [tileOver, tileDown].GetComponent<tileStuff> ();
 				if (!downTile.getIsPlatform () && (tileScript.getElevCat() == null)) {
@@ -111,4 +118,5 @@ public class attackCatControl : allCatsControl {
 			tileSpot = new Vector2 (currI - 1, currJ);
 		}
 	}
+
 }

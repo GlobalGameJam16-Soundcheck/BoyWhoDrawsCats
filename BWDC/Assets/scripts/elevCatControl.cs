@@ -7,7 +7,6 @@ public class elevCatControl : allCatsControl {
 	public int maxJ { get; set; }
 	public int minJ { get; set; }
 	public bool moving { get; set; }
-	private bool posSet;
 
 	// Use this for initialization
 	void Start () {
@@ -16,7 +15,6 @@ public class elevCatControl : allCatsControl {
 		maxJ = currJ + jRange;
 		minJ = currJ - jRange;
 		moving = false;
-		posSet = false;
 	}
 	
 	// Update is called once per frame
@@ -48,7 +46,11 @@ public class elevCatControl : allCatsControl {
 		int tsI = gridCont.convertToTileCoord (tileSpot.x);
 		int tsJ = gridCont.convertToTileCoord (tileSpot.y);
 		if (i == tsI && j == tsJ) {
-			moving = false;
+			movingTimer -= Time.deltaTime;
+			if (movingTimer < 0f) {
+				movingTimer = origMovingTimer;
+				moving = false;
+			}
 		}
 	}
 
@@ -68,7 +70,7 @@ public class elevCatControl : allCatsControl {
 			} else {
 				nextJ++;
 			}
-			Debug.Log (movingDown);
+//			Debug.Log (movingDown);
 			tileScript = tiles [i, nextJ].GetComponent<tileStuff> ();
 			if (tileScript.getIsPlatform () || tileScript.getElevCat () != null) {
 				notPlat = true;
@@ -87,22 +89,6 @@ public class elevCatControl : allCatsControl {
 		moving = true;
 		tileSpot = new Vector2 (i, gridCont.convertToTileCoord(foundJ) - gridCont.tileSize / 3);
 		return gridCont.convertToTileCoord (foundJ);
-	}
-
-	public void setPos(int i, int j){
-		float epsilon = 0.05f;
-		Vector2 tryVect = new Vector2 (i, j - gridCont.tileSize / 3);
-		if (Vector2.Distance (tryVect, transform.position) > epsilon) {
-			tileSpot = tryVect;
-			posSet = true;
-		}
-//		if (moving) {
-//			Debug.Log ("moving");
-//			tileSpot = new Vector2 (i, j - gridCont.tileSize / 3);
-//			posSet = true;
-//		} else {
-//			Debug.Log ("not moving");
-//		}
 	}
 
 }

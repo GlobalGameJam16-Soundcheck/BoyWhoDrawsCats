@@ -11,6 +11,8 @@ public class allCatsControl : MonoBehaviour {
 	protected int newI;
 	protected int newJ;
 	protected float moveSpeed;
+	protected float movingTimer;
+	protected float origMovingTimer;
 
 //	// Use this for initialization
 	void Start () {
@@ -25,6 +27,8 @@ public class allCatsControl : MonoBehaviour {
 		newI = currI;
 		newJ = currJ;
 		moveSpeed = 0.07f;
+		movingTimer = 0.5f;
+		origMovingTimer = movingTimer;
 	}
 	
 	// Update is called once per frame
