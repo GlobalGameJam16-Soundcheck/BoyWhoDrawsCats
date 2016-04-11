@@ -15,12 +15,15 @@ public class gestureController : MonoBehaviour
 	//public GameObject testDot;
 	public GameObject player;
 	private movment playerController;
+	public bool tablet;
 
 	// Use this for initialization
 	void Start()
 	{
 		playerController = player.GetComponent<movment> ();
-		Cursor.visible = false;
+		if (tablet) {
+			Cursor.visible = false;
+		}
 	}
 
 	// Update is called once per frame
