@@ -11,7 +11,7 @@ public class ratsControl : allCatsControl {
 	// Use this for initialization
 	void Start () {
 		started = false;
-		Invoke ("delayedStart", 2f);
+		Invoke ("delayedStart", 1f);
 	}
 
 	private void delayedStart(){
@@ -20,6 +20,7 @@ public class ratsControl : allCatsControl {
 //		speedDenom = Random.Range (1f, 10f);
 		speedDenom = 4f;
 		started = true;
+		movingTimer = 0.0f;
 	}
 	
 	// Update is called once per frame
