@@ -9,6 +9,7 @@ public class movment : MonoBehaviour {
 	public GameObject deleteLight;
 	private float mouseHoldTimer;
 	private float origMouseHoldTimer;
+	public int inkLeft;
 
 
     Vector3 dest;
@@ -34,12 +35,14 @@ public class movment : MonoBehaviour {
 	private int elevCatMinJ;
 	public int elevCat = 1;
 	private Transform currRidingCat = null;
+	public int elevInkCost;
 
 	[Header("AttackCat")]
 	public GameObject attackCatPrefab;
 	public int attackCat = 2;
 	public int attackCatRight = 2;
 	public int attackCatLeft = 3;
+	public int attackInkCost;
 
 	// Use this for initialization
 	void Start () {
@@ -116,7 +119,8 @@ public class movment : MonoBehaviour {
 			if (gridCont.onGrid(clickedI, clickedJ)){
 				tileStuff tileScript = tiles [clickedI, clickedJ].GetComponent<tileStuff>();
 				deleteLight.transform.position = new Vector2 (clickedI, clickedJ);
-				tileScript.deleteAllCats ();
+				inkLeft += tileScript.deleteAllCats (elevInkCost, attackInkCost);
+				Debug.Log ("inkLeft: " + inkLeft);
 				if (clickedI == boyTileI && clickedJ == boyTileJ) {
 					int lowerJ = boyTileJ - 1;
 					if (gridCont.onGrid (clickedI, lowerJ)) {
@@ -134,10 +138,16 @@ public class movment : MonoBehaviour {
 
 	public void spawnElevCat(){
 		bool cannotSpawn = false;
+		int nextInkLeft = inkLeft - elevInkCost;
+		if (nextInkLeft <= 0) {
+			Debug.Log ("no more ink");
+			return;
+		}
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			if (tileScript.getElevCat () == null) {
 				tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
+				inkLeft = nextInkLeft;
 			} else {
 				cannotSpawn = true;
 			}
@@ -150,11 +160,17 @@ public class movment : MonoBehaviour {
 	}
 
 	public void spawnAttackCat(int ac){
+		int nextInkLeft = inkLeft - attackInkCost;
+		if (nextInkLeft <= 0) {
+			Debug.Log ("no more ink");
+			return;
+		}
 		attackCat = ac;
 		bool cannotSpawn = false;
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			tileScript.placeCat (attackCat, attackCatPrefab, gridCont.tileSize);
+			inkLeft = nextInkLeft;
 		} else {
 			cannotSpawn = true;
 		}

@@ -14,8 +14,11 @@ public class attackCatControl : allCatsControl {
 		mySprite = GetComponent<SpriteRenderer> ();
 		floating = false;
 		falling = false;
-		movingTimer -= 0.1f;
+//		movingTimer -= 0.1f;
+		movingTimer /= 2f;
 		origMovingTimer = movingTimer;
+		currI = gridCont.convertToTileCoord (transform.position.x);
+		currJ = gridCont.convertToTileCoord (transform.position.y);
 	}
 	
 	// Update is called once per frame
@@ -36,22 +39,22 @@ public class attackCatControl : allCatsControl {
 
 	protected override void updateTiles(){
 		tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
-		tileScript.setAttackCat (null);
+		tileScript.removeAttackCat (transform.gameObject);
 		tileScript = tiles [newI, newJ].GetComponent<tileStuff> ();
-		tileScript.setAttackCat (transform.gameObject);
+		tileScript.addAttackCat (transform.gameObject);
 		currI = newI;
 		currJ = newJ;
 		if (tileScript.ratObj != null) {
-			tileScript.deleteAttackCat ();
+			tileScript.deleteAttackCat (transform.gameObject);
 			tileScript.deleteRat ();
 		}
 	}
 
 	private void changeSprite(){
 		if (facingRight) {
-			mySprite.flipX = true;
-		} else {
 			mySprite.flipX = false;
+		} else {
+			mySprite.flipX = true;
 		}
 	}
 

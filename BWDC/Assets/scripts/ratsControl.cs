@@ -48,10 +48,10 @@ public class ratsControl : allCatsControl {
 		tileScript.setRat (transform.gameObject);
 		currI = newI;
 		currJ = newJ;
-		if (tileScript.attackCatObj != null) {
-			tileScript.deleteAttackCat ();
-			tileScript.deleteRat ();
-		}
+//		if (tileScript.hasAttackCat()) {
+//			tileScript.deleteAttackCat ();
+//			tileScript.deleteRat ();
+//		}
 	}
 
 	private void moveForwards(){

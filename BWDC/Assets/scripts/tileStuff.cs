@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class tileStuff : MonoBehaviour {
 
@@ -11,7 +12,7 @@ public class tileStuff : MonoBehaviour {
 	public int elevCat = 1; //?
 
 	//[Header("AttackCat")]
-	public GameObject attackCatObj { get; set; }
+	public List<GameObject> attackCatObjs;
 	public int attackCat = 2;
 	public int attackCatSpawnLeft = 3;
 
@@ -42,12 +43,15 @@ public class tileStuff : MonoBehaviour {
 			elevCatObj = (GameObject)(Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
 			setElevCat (elevCatObj);
 		} else if (type == attackCat) {
-			attackCatObj = (GameObject)(Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
-			setAttackCat (attackCatObj);
+			if (attackCatObjs == null) {
+				attackCatObjs = new List<GameObject> ();
+			}
+			GameObject attackCatObj = (GameObject)(Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
+			addAttackCat (attackCatObj);
 			attackCatObj.GetComponent<attackCatControl> ().setFacingRight (true);
 		} else if (type == attackCatSpawnLeft) {
-			attackCatObj = (GameObject)(Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
-			setAttackCat (attackCatObj);
+			GameObject attackCatObj = (GameObject)(Instantiate (cat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
+			addAttackCat (attackCatObj);
 			attackCatObj.GetComponent<attackCatControl> ().setFacingRight (false);
 		}
 	}
@@ -59,9 +63,18 @@ public class tileStuff : MonoBehaviour {
 		setRat (ratObj);
 	}
 
-	public void setAttackCat(GameObject cat){
-		attackCatObj = cat;
+	public void addAttackCat(GameObject cat){
+		if (attackCatObjs == null) {
+			attackCatObjs = new List<GameObject> ();
+		}
+		attackCatObjs.Add (cat);
 		checkCanRemoveCat ();
+	}
+
+	public void removeAttackCat(GameObject cat){
+		if (attackCatObjs != null && attackCatObjs.Count > 0) {
+			attackCatObjs.Remove (cat);
+		}
 	}
 
 	public void setElevCat(GameObject cat){
@@ -75,7 +88,7 @@ public class tileStuff : MonoBehaviour {
 	}
 
 	private void checkCanRemoveCat(){
-		canRemoveCat = (elevCatObj != null || attackCatObj != null);
+		canRemoveCat = (elevCatObj != null || (attackCatObjs != null && attackCatObjs.Count > 0));
 	}
 
 	public GameObject getElevCat(){
@@ -83,26 +96,47 @@ public class tileStuff : MonoBehaviour {
 	}
 
 	public bool hasACat(){
-		return (elevCatObj != null && attackCatObj != null);
+//		return (elevCatObj != null && (attackCatObjs != null));
+		return canRemoveCat;
 	}
 
-	public void deleteAllCats(){
-		deleteElevCat ();
-		deleteAttackCat ();
+	public int deleteAllCats(int elevInkCost, int attackInkCost){
+		bool elevDeleted = deleteElevCat ();
+		int numAttackDeleted = deleteAttackCats ();
+		int ret = 0;
+		if (elevDeleted) {
+			ret += elevInkCost;
+		}
+		ret += (attackInkCost * numAttackDeleted);
+		return ret;
 	}
 
-	public void deleteElevCat(){
+	public bool deleteElevCat(){
 		if (elevCatObj != null) {
 			Destroy (elevCatObj);
 			setElevCat (null);
+			return true;
 		}
+		return false;
 	}
 
-	public void deleteAttackCat(){
-		if (attackCatObj != null) {
-			Destroy (attackCatObj);
-			setAttackCat (null);
+	public int deleteAttackCats(){
+		int ret = 0;
+		if (attackCatObjs != null && attackCatObjs.Count > 0) {
+			foreach (GameObject attackCatObj in attackCatObjs) {
+				Destroy (attackCatObj);
+				ret++;
+			}
+			attackCatObjs = new List<GameObject> ();
+//			Destroy (attackCatObj);
+//			setAttackCat (null);
 		}
+		return ret;
+	}
+
+	public void deleteAttackCat(GameObject cat){
+		removeAttackCat (cat);
+		Destroy (cat);
 	}
 
 	public void deleteRat(){

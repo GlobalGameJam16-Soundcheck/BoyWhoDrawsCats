@@ -93,7 +93,7 @@ public class gestureController : MonoBehaviour
 			{
 				tempStrokes += strokes[i].ToString();
 			}
-			Debug.Log(tempStrokes);
+//			Debug.Log(tempStrokes);
 
 			points.Clear();
 			tempPoints.Clear();
