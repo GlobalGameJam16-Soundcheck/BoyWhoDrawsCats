@@ -7,6 +7,8 @@ public class elevCatControl : allCatsControl {
 	public int maxJ { get; set; }
 	public int minJ { get; set; }
 	public bool moving { get; set; }
+	public bool actuallyMoving { get; set; }
+	private Vector2 oldPos;
 
 	// Use this for initialization
 	void Start () {
@@ -15,6 +17,8 @@ public class elevCatControl : allCatsControl {
 		maxJ = currJ + jRange;
 		minJ = currJ - jRange;
 		moving = false;
+		actuallyMoving = false;
+		oldPos = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -52,11 +56,18 @@ public class elevCatControl : allCatsControl {
 				moving = false;
 			}
 		}
+//		Debug.Log("old: " + oldPos + " new: " + transform.position);
+		if (Vector2.Distance (oldPos, transform.position) <= 0.005) {
+			actuallyMoving = false;
+		} else {
+			actuallyMoving = true;
+		}
+		oldPos = transform.position;
 	}
 
 	public int moveTo(int i, int j){
 		if (j == currJ) {
-			moving = false;
+//			moving = false;
 			return currJ;
 		}
 		int foundJ = j;
@@ -89,6 +100,14 @@ public class elevCatControl : allCatsControl {
 		moving = true;
 		tileSpot = new Vector2 (i, gridCont.convertToTileCoord(foundJ) - gridCont.tileSize / 3);
 		return gridCont.convertToTileCoord (foundJ);
+	}
+
+	public Vector2 getTileSpot(){
+		return tileSpot;
+	}
+
+	public float getMoveSpeed(){
+		return moveSpeed;
 	}
 
 }

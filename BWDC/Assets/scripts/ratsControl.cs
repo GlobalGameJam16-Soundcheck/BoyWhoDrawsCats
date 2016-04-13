@@ -7,6 +7,9 @@ public class ratsControl : allCatsControl {
 	private SpriteRenderer mySprite;
 	private bool started;
 	private float speedDenom;
+	private bool onElevCat;
+	private GameObject elevCatObj;
+	private float origMoveSpeed;
 
 	// Use this for initialization
 	void Start () {
@@ -20,7 +23,11 @@ public class ratsControl : allCatsControl {
 //		speedDenom = Random.Range (1f, 10f);
 		speedDenom = 4f;
 		started = true;
-		movingTimer = 0.0f;
+//		movingTimer /= 2f;
+//		origMovingTimer = movingTimer;
+		onElevCat = false;
+		elevCatObj = null;
+		origMoveSpeed = moveSpeed;
 	}
 	
 	// Update is called once per frame
@@ -61,28 +68,32 @@ public class ratsControl : allCatsControl {
 		} else {
 			tileOver--;
 		}
-		tileStuff tileScript;
+		tileStuff tileOverScript;
 		bool turnAround = false;
+		bool doRegular = true;
 		if (gridCont.onGrid (tileOver, currJ)) {
-			tileScript = tiles [tileOver, currJ].GetComponent<tileStuff> ();
-			if (tileScript.getIsPlatform ()) {
-				movingTimer -= Time.deltaTime;
-				if (movingTimer < 0f) {
-					turnAround = true;
-					movingTimer = origMovingTimer;
+			int tileDown = currJ - 1;
+			tileStuff downTile = tiles [currI, tileDown].GetComponent<tileStuff> ();
+			tileStuff downTileOver = tiles [tileOver, tileDown].GetComponent<tileStuff> ();
+			if (!onElevCat || downTileOver.getIsPlatform () || elevCatObj == null) { //do regular left right movement
+				if (elevCatObj != null && elevCatObj.GetComponent<elevCatControl> ().actuallyMoving) {
+//					Debug.Break ();
+					doRegular = false;
+				} else {
+					tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
+					elevCatObj = tileScript.getElevCat ();
+					if (elevCatObj == null) {
+						onElevCat = false;
+						moveSpeed = origMoveSpeed;
+					} else {
+						onElevCat = true;
+//						doRegular = false;
+					}
+					tileOverScript = tiles [tileOver, currJ].GetComponent<tileStuff> ();
+					turnAround = doRegularMovement (tileOverScript, downTileOver);
 				}
 			} else {
-				int tileDown = currJ - 1;
-				tileStuff downTile = tiles [tileOver, tileDown].GetComponent<tileStuff> ();
-				if (!downTile.getIsPlatform () && (tileScript.getElevCat () == null)) {
-					movingTimer -= Time.deltaTime;
-					if (movingTimer < 0f) {
-						turnAround = true;
-						movingTimer = origMovingTimer;
-					}
-				} else {
-					movingTimer = origMovingTimer;
-				}
+				doRegular = false;
 			}
 		} else {
 			turnAround = true;
@@ -91,11 +102,52 @@ public class ratsControl : allCatsControl {
 			facingRight = !facingRight;
 		}
 		float denom = 3f;
-		if (facingRight) {
-			tileSpot = new Vector2 (currI + 1, currJ - gridCont.tileSize / denom);
+		if (doRegular) {
+			if (facingRight) {
+				tileSpot = new Vector2 (currI + 1, currJ - gridCont.tileSize / denom);
+			} else {
+				tileSpot = new Vector2 (currI - 1, currJ - gridCont.tileSize / denom);
+			}
 		} else {
-			tileSpot = new Vector2 (currI - 1, currJ - gridCont.tileSize / denom);
+			elevCatControl ecc = elevCatObj.GetComponent<elevCatControl> ();
+			Debug.Log ("on a cat move towards that stuff");
+			moveSpeed = ecc.getMoveSpeed() * 4f;
+			Debug.Log ("new move speed: " + moveSpeed);
+			tileSpot = ecc.getTileSpot ();
 		}
+	}
+
+	private bool doRegularMovement(tileStuff tileOverScript, tileStuff downTileOver){
+		bool turnAround = false;
+		if (tileOverScript.getIsPlatform ()) { //must turn around 
+			movingTimer -= Time.deltaTime;
+			if (movingTimer < 0f) {
+				turnAround = true;
+				movingTimer = origMovingTimer;
+			}
+		} else {
+//			elevCatObj = tileScript.getElevCat ();
+			if (!downTileOver.getIsPlatform () && (tileOverScript.getElevCat() == null)) { //must turn around
+//				onElevCat = false;
+				movingTimer -= Time.deltaTime;
+				if (movingTimer < 0f) {
+					turnAround = true;
+					movingTimer = origMovingTimer;
+				}
+			} else {
+				tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
+				tileStuff downTile = tiles [currI, currJ - 1].GetComponent<tileStuff> ();
+				if (tileScript.getElevCat () == null && !downTile.getIsPlatform()) {
+					Debug.Log ("***********");
+					turnAround = true;
+				}
+				movingTimer = origMovingTimer;
+//				if (elevCatObj != null) {
+//					onElevCat = true;
+//				}
+			}
+		}
+		return turnAround;
 	}
 
 }
