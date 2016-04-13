@@ -115,6 +115,9 @@ public class tileStuff : MonoBehaviour {
 		if (elevCatObj != null) {
 			Destroy (elevCatObj);
 			setElevCat (null);
+			if (ratObj != null) {
+				ratObj.GetComponent<ratsControl> ().fallDown ();
+			}
 			return true;
 		}
 		return false;

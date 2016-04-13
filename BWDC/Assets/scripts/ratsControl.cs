@@ -10,6 +10,9 @@ public class ratsControl : allCatsControl {
 	private bool onElevCat;
 	private GameObject elevCatObj;
 	private float origMoveSpeed;
+	private float origMoveTimerOnElev;
+	private float origMoveSpeedOnElev;
+	private bool falling;
 
 	// Use this for initialization
 	void Start () {
@@ -28,6 +31,9 @@ public class ratsControl : allCatsControl {
 		onElevCat = false;
 		elevCatObj = null;
 		origMoveSpeed = moveSpeed;
+		origMoveTimerOnElev = movingTimer / 1f;
+		origMoveSpeedOnElev = moveSpeed / 2f;
+		falling = false;
 	}
 	
 	// Update is called once per frame
@@ -62,13 +68,20 @@ public class ratsControl : allCatsControl {
 	}
 
 	private void moveForwards(){
+		if (falling) {
+			Debug.Log ("checkFalling");
+			falling = checkFalling ();
+			if (falling) {
+				return;
+			}
+		}
 		int tileOver = currI;
 		if (facingRight) {
 			tileOver++;
 		} else {
 			tileOver--;
 		}
-		tileStuff tileOverScript;
+		tileStuff tileOverScript = tiles [tileOver, currJ].GetComponent<tileStuff> ();
 		bool turnAround = false;
 		bool doRegular = true;
 		if (gridCont.onGrid (tileOver, currJ)) {
@@ -76,7 +89,7 @@ public class ratsControl : allCatsControl {
 			tileStuff downTile = tiles [currI, tileDown].GetComponent<tileStuff> ();
 			tileStuff downTileOver = tiles [tileOver, tileDown].GetComponent<tileStuff> ();
 			if (!onElevCat || downTileOver.getIsPlatform () || elevCatObj == null) { //do regular left right movement
-				if (elevCatObj != null && elevCatObj.GetComponent<elevCatControl> ().actuallyMoving) {
+				if (elevCatObj != null && elevCatObj.GetComponent<elevCatControl> ().actuallyMoving && !downTile.getIsPlatform()) {
 //					Debug.Break ();
 					doRegular = false;
 				} else {
@@ -89,11 +102,16 @@ public class ratsControl : allCatsControl {
 						onElevCat = true;
 //						doRegular = false;
 					}
-					tileOverScript = tiles [tileOver, currJ].GetComponent<tileStuff> ();
-					turnAround = doRegularMovement (tileOverScript, downTileOver);
+					turnAround = doRegularMovement (tileOverScript, downTileOver, false);
 				}
 			} else {
-				doRegular = false;
+				if (elevCatObj.GetComponent<elevCatControl> ().actuallyMoving) {
+					doRegular = false;
+				} else {
+//					movingTimer
+					turnAround = doRegularMovement (tileOverScript, downTileOver, true);
+//					moveSpeed = origMoveSpeed;
+				}
 			}
 		} else {
 			turnAround = true;
@@ -117,8 +135,13 @@ public class ratsControl : allCatsControl {
 		}
 	}
 
-	private bool doRegularMovement(tileStuff tileOverScript, tileStuff downTileOver){
+	private bool doRegularMovement(tileStuff tileOverScript, tileStuff downTileOver, bool turnFaster){
 		bool turnAround = false;
+		if (turnFaster) {
+			float currDiff = origMovingTimer - movingTimer;
+			movingTimer = origMoveTimerOnElev - currDiff;
+			moveSpeed = origMoveSpeedOnElev;
+		}
 		if (tileOverScript.getIsPlatform ()) { //must turn around 
 			movingTimer -= Time.deltaTime;
 			if (movingTimer < 0f) {
@@ -148,6 +171,43 @@ public class ratsControl : allCatsControl {
 			}
 		}
 		return turnAround;
+	}
+
+	private bool checkFalling(){
+		if (!gridCont.onGrid (currI, currJ) || !gridCont.onGrid (currI, currJ - 1)) {
+			return true;
+		}
+		tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
+		tileStuff downTile = tiles [currI, currJ - 1].GetComponent<tileStuff> ();
+		if (tileScript.getElevCat () != null || downTile.getIsPlatform()) {
+			return false;
+		}
+		return true;
+	}
+
+	public void fallDown(){
+		Debug.Log ("falling!");
+		tileStuff tileScript;
+		moveSpeed = origMoveSpeed * 4f;
+		falling = true;
+		elevCatObj = null;
+		int nextJ = currJ;
+		int foundJ = nextJ;
+		bool notPlat = false;
+		while (!notPlat) {
+			nextJ--;
+			tileScript = tiles [currI, nextJ].GetComponent<tileStuff> ();
+			if (tileScript.getIsPlatform () || tileScript.getElevCat () != null) {
+				notPlat = true;
+				foundJ = nextJ + 1;
+			} else {
+				if (nextJ == currJ) {
+					foundJ = nextJ;
+					notPlat = true;
+				}
+			}
+		}
+		tileSpot = new Vector2 (currI, gridCont.convertToTileCoord(foundJ) - gridCont.tileSize / 3);
 	}
 
 }
