@@ -12,9 +12,14 @@ public class gestureController : MonoBehaviour
 	string tempStrokes = "";
 	public List<string> gestures = new List<string>();
 	public List<string> gestureNames = new List<string>();
+	private List<GameObject> tipList = new List<GameObject> ();
 	//public GameObject testDot;
+
+
 	public GameObject player;
 	private movment playerController;
+
+
 	public bool tablet;
 
 	// Use this for initialization
@@ -24,27 +29,39 @@ public class gestureController : MonoBehaviour
 		if (tablet) {
 			Cursor.visible = false;
 		}
+//		penTip.GetComponent<TrailRenderer> ().sortingLayerName = "trailLayer";
+//		penTip.GetComponent<TrailRenderer> ().sortingOrder = 2;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		checkSpawning ();
+		checkSpawningAndDeleting ();
+		if (playerController.mouseHoldTimer > 0) {
+			return;
+		}
 		if (Input.GetMouseButtonDown(0))
 		{
-			penTip.SetActive (true);
+//			penTip.SetActive (true);
 			transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			penTip.transform.position = transform.position;
+//			penTip.transform.position = transform.position;
 		}
 		if (Input.GetMouseButton(0))
 		{
 			transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			GameObject tip = (GameObject)Instantiate (penTip, transform.position, Quaternion.identity);
+			tipList.Add (tip);
+			tip.GetComponent<penTipControl> ().startTrail ();
 			transform.position = new Vector3(transform.position.x, transform.position.y, 0.0f);
 			points.Add(new Vector2(transform.position.x, transform.position.y));
 		}
 		if (Input.GetMouseButtonUp(0))
 		{
-			penTip.SetActive (false);
+			foreach (GameObject tip in tipList) {
+				Destroy (tip);
+			}
+			tipList = new List<GameObject> ();
+//			penTip.SetActive (false);
 			float angleSum = 0;
 			int connerSize = 5;
 			for (int i = 2; i < points.Count - connerSize; i++)
@@ -93,7 +110,7 @@ public class gestureController : MonoBehaviour
 			{
 				tempStrokes += strokes[i].ToString();
 			}
-//			Debug.Log(tempStrokes);
+			Debug.Log(tempStrokes);
 
 			points.Clear();
 			tempPoints.Clear();
@@ -101,15 +118,19 @@ public class gestureController : MonoBehaviour
 		}
 	}
 
-	private void checkSpawning(){
+	private void checkSpawningAndDeleting(){
 		string gesture = spawn ();
 		if (gestureNames.Count > 0) {
-			if (gesture.Equals (gestureNames [0]) || gesture.Equals (gestureNames [1])) {
-				playerController.spawnElevCat ();
-			} else if (gesture.Equals (gestureNames [2])) {
-				playerController.spawnAttackCat (playerController.attackCatRight);
-			} else if (gesture.Equals (gestureNames [3])) {
-				playerController.spawnAttackCat (playerController.attackCatLeft);
+			if (gesture.Equals(gestureNames[4])){
+				playerController.deleteCats ();
+			} else {
+				if (gesture.Equals (gestureNames [0]) || gesture.Equals (gestureNames [1])) {
+					playerController.spawnElevCat ();
+				} else if (gesture.Equals (gestureNames [2])) {
+					playerController.spawnAttackCat (playerController.attackCatRight);
+				} else if (gesture.Equals (gestureNames [3])) {
+					playerController.spawnAttackCat (playerController.attackCatLeft);
+				}
 			}
 		}
 	}

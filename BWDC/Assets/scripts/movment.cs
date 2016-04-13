@@ -5,12 +5,20 @@ public class movment : MonoBehaviour {
 
 	//note all the i's and j's are really x and y coordinates
 
+	[Header("For the boy")]
     public GameObject highlight;
 	public GameObject deleteLight;
-	private float mouseHoldTimer;
+	public GameObject drawingOn;
+	public float mouseHoldTimer { get; set; }
 	private float origMouseHoldTimer;
 	public int inkLeft;
-
+	public int health;
+	private bool flashing;
+	private float flashTimer;
+	private float origFlashTimer;
+	private int flashCount = 0;
+	private SpriteRenderer mySprite;
+	public bool gamePaused { get; set; }
 
     Vector3 dest;
     private float walkSpeed = 0.07f;
@@ -56,42 +64,96 @@ public class movment : MonoBehaviour {
 		dest = new Vector3 (xPos, yPos, 0f);
 //		mySprite = GetComponent<SpriteRenderer> ();
 //		rightSprite = mySprite.sprite;
-		mouseHoldTimer = 0.3f;
+		mouseHoldTimer = 0.15f;
 		origMouseHoldTimer = mouseHoldTimer;
+		mySprite = GetComponent<SpriteRenderer> ();
+		flashTimer = 0.1f;
+		origFlashTimer = flashTimer;
     }
 	
 	// Update is called once per frame
 	void Update () {
-		changeSprite ();
 		camPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-		transform.position = Vector3.MoveTowards(transform.position, new Vector3(dest.x, dest.y, 0), walkSpeed);
-		boyTileI = gridCont.convertToTileCoord (transform.position.x);
-		boyTileJ = gridCont.convertToTileCoord (transform.position.y);
-		if (Input.GetMouseButton (0)) {
-			mouseHoldTimer -= Time.deltaTime;
-			Debug.Log (mouseHoldTimer);
-		}
-        if (Input.GetMouseButtonUp(0)) {
-			float oldMouseTimer = mouseHoldTimer;
-			mouseHoldTimer = origMouseHoldTimer;
-			if (oldMouseTimer > 0f) {
-				if ((!falling && !floating) || (reachedDestination () && usingElevator)) {
-					checkNewPos ();
+		checkGotHit ();
+		if (health > 0){
+			changeSprite ();
+			if (!gridCont.gamePaused) {
+				transform.position = Vector3.MoveTowards (transform.position, new Vector3 (dest.x, dest.y, 0), walkSpeed);
+				boyTileI = gridCont.convertToTileCoord (transform.position.x);
+				boyTileJ = gridCont.convertToTileCoord (transform.position.y);
+				checkHitByRat ();
+			}
+			if (Input.GetMouseButton (0)) {
+				mouseHoldTimer -= Time.deltaTime;
+				Debug.Log (mouseHoldTimer);
+				if (mouseHoldTimer <= 0) {
+					gridCont.gamePaused = true;
+					if (!drawingOn.activeInHierarchy) {
+						drawingOn.SetActive (true);
+					}
 				}
-			} else {
-				Debug.Log ("must be drawing?");
 			}
-        }
-		if (!reachedDestination ()) {
-			checkDestination ();
+	        if (Input.GetMouseButtonUp(0)) {
+				gridCont.gamePaused = false;
+				if (drawingOn.activeInHierarchy) {
+					drawingOn.SetActive (false);
+				}
+				float oldMouseTimer = mouseHoldTimer;
+				mouseHoldTimer = origMouseHoldTimer;
+				if (oldMouseTimer > 0f) {
+					if ((!falling && !floating) || (reachedDestination () && usingElevator)) {
+						checkNewPos ();
+					}
+				} else {
+					Debug.Log ("must be drawing?");
+				}
+	        }
+			if (!gridCont.gamePaused) {
+				if (!reachedDestination ()) {
+					checkDestination ();
+				} else {
+					if (falling) {
+						setFallingDest ();
+					}
+				}
+//				checkDeletingCats ();
+				//		checkSpawningCats ();
+			}
 		} else {
-			if (falling) {
-				setFallingDest ();
+			
+		}
+    }
+
+	private void checkGotHit(){
+		if (flashing) {
+			flashTimer -= Time.deltaTime;
+			if (flashTimer <= 0) {
+				flashTimer = origFlashTimer;
+				if (flashCount % 2 == 0) {
+					mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 0.2f);
+				} else {
+					mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 1f);
+				}
+				flashCount++;
 			}
 		}
-		checkDeletingCats ();
-//		checkSpawningCats ();
-    }
+	}
+
+	private void checkHitByRat(){
+		GameObject ratObj = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ().getRat ();
+		if (ratObj != null) {
+			health -= ratObj.GetComponent<ratsControl>().getDamage ();
+			if (health <= 0) {
+//				Time.timeScale /= 2;
+				flashing = true;
+				Invoke ("death", 2f);
+			}
+		}
+	}
+
+	private void death(){
+		gridCont.reloadScene ();
+	}
 
 	private void changeSprite(){
 
@@ -112,29 +174,51 @@ public class movment : MonoBehaviour {
 		return ret;
 	}
 
-	private void checkDeletingCats(){
-		if (Input.GetMouseButtonUp(1)){
-			int clickedI = gridCont.convertToTileCoord (camPos.x);
-			int clickedJ = gridCont.convertToTileCoord (camPos.y);
-			if (gridCont.onGrid(clickedI, clickedJ)){
-				tileStuff tileScript = tiles [clickedI, clickedJ].GetComponent<tileStuff>();
-				deleteLight.transform.position = new Vector2 (clickedI, clickedJ);
-				inkLeft += tileScript.deleteAllCats (elevInkCost, attackInkCost);
-				Debug.Log ("inkLeft: " + inkLeft);
-				if (clickedI == boyTileI && clickedJ == boyTileJ) {
-					int lowerJ = boyTileJ - 1;
-					if (gridCont.onGrid (clickedI, lowerJ)) {
-						tileStuff belowTile = tiles [clickedI, lowerJ].GetComponent<tileStuff> ();
-						if (tileScript.getElevCat () == null && !belowTile.getIsPlatform()) {
-							floating = true;
-							dest = new Vector3 (clickedI, lowerJ, 0f);
-							Debug.Log ("new dest gotta float no more elev cat");
-						}
+	public void deleteCats(){
+		int clickedI = gridCont.convertToTileCoord (camPos.x);
+		int clickedJ = gridCont.convertToTileCoord (camPos.y);
+		if (gridCont.onGrid(clickedI, clickedJ)){
+			tileStuff tileScript = tiles [clickedI, clickedJ].GetComponent<tileStuff>();
+			deleteLight.transform.position = new Vector2 (clickedI, clickedJ);
+			inkLeft += tileScript.deleteAllCats (elevInkCost, attackInkCost);
+			Debug.Log ("inkLeft: " + inkLeft);
+			if (clickedI == boyTileI && clickedJ == boyTileJ) {
+				int lowerJ = boyTileJ - 1;
+				if (gridCont.onGrid (clickedI, lowerJ)) {
+					tileStuff belowTile = tiles [clickedI, lowerJ].GetComponent<tileStuff> ();
+					if (tileScript.getElevCat () == null && !belowTile.getIsPlatform()) {
+						floating = true;
+						dest = new Vector3 (clickedI, lowerJ, 0f);
+						Debug.Log ("new dest gotta float no more elev cat");
 					}
 				}
 			}
 		}
 	}
+
+//	private void checkDeletingCats(){
+//		if (Input.GetMouseButtonUp(1)){
+//			int clickedI = gridCont.convertToTileCoord (camPos.x);
+//			int clickedJ = gridCont.convertToTileCoord (camPos.y);
+//			if (gridCont.onGrid(clickedI, clickedJ)){
+//				tileStuff tileScript = tiles [clickedI, clickedJ].GetComponent<tileStuff>();
+//				deleteLight.transform.position = new Vector2 (clickedI, clickedJ);
+//				inkLeft += tileScript.deleteAllCats (elevInkCost, attackInkCost);
+//				Debug.Log ("inkLeft: " + inkLeft);
+//				if (clickedI == boyTileI && clickedJ == boyTileJ) {
+//					int lowerJ = boyTileJ - 1;
+//					if (gridCont.onGrid (clickedI, lowerJ)) {
+//						tileStuff belowTile = tiles [clickedI, lowerJ].GetComponent<tileStuff> ();
+//						if (tileScript.getElevCat () == null && !belowTile.getIsPlatform()) {
+//							floating = true;
+//							dest = new Vector3 (clickedI, lowerJ, 0f);
+//							Debug.Log ("new dest gotta float no more elev cat");
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 
 	public void spawnElevCat(){
 		bool cannotSpawn = false;

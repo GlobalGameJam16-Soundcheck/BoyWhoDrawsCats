@@ -13,6 +13,7 @@ public class ratsControl : allCatsControl {
 	private float origMoveTimerOnElev;
 	private float origMoveSpeedOnElev;
 	private bool falling;
+	private int damage;
 
 	// Use this for initialization
 	void Start () {
@@ -34,11 +35,12 @@ public class ratsControl : allCatsControl {
 		origMoveTimerOnElev = movingTimer / 1f;
 		origMoveSpeedOnElev = moveSpeed / 2f;
 		falling = false;
+		damage = 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (started) {
+		if (started && timeIsNormal()) {
 			base.updateTilePos ();
 			moveForwards ();
 			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed / speedDenom);
@@ -208,6 +210,10 @@ public class ratsControl : allCatsControl {
 			}
 		}
 		tileSpot = new Vector2 (currI, gridCont.convertToTileCoord(foundJ) - gridCont.tileSize / 3);
+	}
+
+	public int getDamage(){
+		return damage;
 	}
 
 }

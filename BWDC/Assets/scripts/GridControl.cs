@@ -14,6 +14,7 @@ public class GridControl : MonoBehaviour {
 	public GameObject rat;
     public TextAsset levelCsv;
 	public float tileSize { get; set; }
+	public bool gamePaused { get; set; }
 
     // Use this for initialization
     void Start () {
@@ -51,8 +52,12 @@ public class GridControl : MonoBehaviour {
 
 	void Update(){
 		if (Input.GetKeyDown ("r")) {
-			SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
+			reloadScene ();
 		}
+	}
+
+	public void reloadScene(){
+		SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
 	}
 
 	public int convertToTileCoord(float x){

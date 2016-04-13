@@ -23,18 +23,20 @@ public class elevCatControl : allCatsControl {
 	
 	// Update is called once per frame
 	void Update () {
-		base.updateTilePos();
-		if (!moving) {
-			if (transform.parent == null) {
-				tileSpot = new Vector2 (newI, newJ - gridCont.tileSize / 3);
-				transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
+		if (timeIsNormal ()) {
+			base.updateTilePos ();
+			if (!moving) {
+				if (transform.parent == null) {
+					tileSpot = new Vector2 (newI, newJ - gridCont.tileSize / 3);
+					transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
+				} else {
+					//fixme make sure i'm at the bottom of the boy's tile if the boy isnt moving i guess
+				}
 			} else {
-				//fixme make sure i'm at the bottom of the boy's tile if the boy isnt moving i guess
+				transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
 			}
-		} else {
-			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
+			checkMoving (newI, newJ);
 		}
-		checkMoving (newI, newJ);
 	}
 
 	protected override void updateTiles (){

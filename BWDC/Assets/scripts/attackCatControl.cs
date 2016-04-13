@@ -23,14 +23,16 @@ public class attackCatControl : allCatsControl {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!floating && !falling) {
-			moveForwards ();
-		} else {
-			fallDownwards ();
+		if (timeIsNormal ()) {
+			if (!floating && !falling) {
+				moveForwards ();
+			} else {
+				fallDownwards ();
+			}
+			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed / 3);
+			changeSprite ();
+			base.updateTilePos ();
 		}
-		transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed / 3);
-		changeSprite ();
-		base.updateTilePos ();
 	}
 
 	public void setFacingRight(bool fr){

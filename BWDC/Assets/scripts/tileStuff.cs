@@ -148,6 +148,10 @@ public class tileStuff : MonoBehaviour {
 			setRat (null);
 		}
 	}
+
+	public GameObject getRat(){
+		return ratObj;
+	}
 	
 //	public void removePlacedCat(){
 //		isPlatform = false;

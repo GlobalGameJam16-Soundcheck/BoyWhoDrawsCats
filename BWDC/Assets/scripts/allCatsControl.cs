@@ -33,7 +33,13 @@ public class allCatsControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		updateTilePos ();
+		if (timeIsNormal()) {
+			updateTilePos ();
+		}
+	}
+
+	protected virtual bool timeIsNormal(){
+		return !gridCont.gamePaused;
 	}
 
 	protected virtual void updateTilePos(){
