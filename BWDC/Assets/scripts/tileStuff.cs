@@ -17,8 +17,18 @@ public class tileStuff : MonoBehaviour {
 	public int attackCatSpawnLeft = 3;
 
 	//[Header("Rat")]
-	public GameObject ratObj { get; set; }
+	public List<GameObject> ratObjs;
 	public bool hasARat = false;
+
+	void Update(){
+		if (ratObjs != null && ratObjs.Count > 0) {
+			if (attackCatObjs != null && attackCatObjs.Count > 0) {
+				deleteRat (ratObjs[0]);
+				deleteAttackCat (attackCatObjs [0]);
+			}
+		}
+		checkCanRemoveCat ();
+	}
 
 	public void setIsPlatform(bool isPlat){
 		isPlatform = isPlat;
@@ -27,14 +37,6 @@ public class tileStuff : MonoBehaviour {
 	public bool getIsPlatform(){
 		return isPlatform;
 	}
-
-//	public bool canStandOn(){
-//		return isPlatform || hasElevCat;
-//	}
-
-//	public bool canPlacePlatCat(){
-//		return isPlatform && !hasElevCat;
-//	}
 
 	public void placeCat(int type, GameObject cat, float tileSize){
 		float x = transform.position.x;
@@ -59,8 +61,8 @@ public class tileStuff : MonoBehaviour {
 	public void placeRat(GameObject rat, float tileSize){
 		float x = transform.position.x;
 		float y = transform.position.y;
-		ratObj = (GameObject)(Instantiate (rat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
-		setRat (ratObj);
+		GameObject ratObj = (GameObject)(Instantiate (rat, new Vector3 (x, y - tileSize / 3, 0), Quaternion.identity));
+		addRat (ratObj);
 	}
 
 	public void addAttackCat(GameObject cat){
@@ -77,14 +79,26 @@ public class tileStuff : MonoBehaviour {
 		}
 	}
 
+	public void removeRat(GameObject rat){
+		if (ratObjs != null && ratObjs.Count > 0) {
+			ratObjs.Remove (rat);
+		}
+	}
+
 	public void setElevCat(GameObject cat){
 		elevCatObj = cat;
 		checkCanRemoveCat ();
 	}
 
-	public void setRat(GameObject rat){
-		ratObj = rat;
-		hasARat = (rat != null);
+	public void addRat(GameObject rat){
+		if (ratObjs == null) {
+			ratObjs = new List<GameObject> ();
+		}
+		ratObjs.Add (rat);
+	}
+
+	private void checkHasRat(){
+		hasARat =  (ratObjs != null && ratObjs.Count > 0);
 	}
 
 	private void checkCanRemoveCat(){
@@ -115,8 +129,10 @@ public class tileStuff : MonoBehaviour {
 		if (elevCatObj != null) {
 			Destroy (elevCatObj);
 			setElevCat (null);
-			if (ratObj != null) {
-				ratObj.GetComponent<ratsControl> ().fallDown ();
+			if (ratObjs != null) {
+				foreach (GameObject ratObj in ratObjs) {
+					ratObj.GetComponent<ratsControl> ().fallDown ();
+				}
 			}
 			return true;
 		}
@@ -131,8 +147,6 @@ public class tileStuff : MonoBehaviour {
 				ret++;
 			}
 			attackCatObjs = new List<GameObject> ();
-//			Destroy (attackCatObj);
-//			setAttackCat (null);
 		}
 		return ret;
 	}
@@ -142,20 +156,21 @@ public class tileStuff : MonoBehaviour {
 		Destroy (cat);
 	}
 
-	public void deleteRat(){
-		if (ratObj != null) {
-			Destroy (ratObj);
-			setRat (null);
-		}
+	public void deleteRat(GameObject rat){
+		removeRat (rat);
+		Destroy (rat);
 	}
 
 	public GameObject getRat(){
+		if (ratObjs == null || ratObjs.Count <= 0) {
+			return null;
+		}
+		GameObject ratObj = ratObjs [0];
 		return ratObj;
 	}
-	
-//	public void removePlacedCat(){
-//		isPlatform = false;
-//		GetComponent<SpriteRenderer> ().color = Color.white;
-//	}
+
+	public void setDoor(bool isDoor){
+		isPlatform = isDoor;
+	}
 
 }

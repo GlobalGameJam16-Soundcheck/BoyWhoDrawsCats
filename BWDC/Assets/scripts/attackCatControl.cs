@@ -46,10 +46,10 @@ public class attackCatControl : allCatsControl {
 		tileScript.addAttackCat (transform.gameObject);
 		currI = newI;
 		currJ = newJ;
-		if (tileScript.ratObj != null) {
-			tileScript.deleteAttackCat (transform.gameObject);
-			tileScript.deleteRat ();
-		}
+//		if (tileScript.ratObj != null) {
+//			tileScript.deleteAttackCat (transform.gameObject);
+//			tileScript.deleteRat ();
+//		}
 	}
 
 	private void changeSprite(){

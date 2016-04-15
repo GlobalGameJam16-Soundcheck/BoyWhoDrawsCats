@@ -27,8 +27,8 @@ public class ratsControl : allCatsControl {
 //		speedDenom = Random.Range (1f, 10f);
 		speedDenom = 4f;
 		started = true;
-//		movingTimer /= 2f;
-//		origMovingTimer = movingTimer;
+		movingTimer /= 2f;
+		origMovingTimer = movingTimer;
 		onElevCat = false;
 		elevCatObj = null;
 		origMoveSpeed = moveSpeed;
@@ -58,9 +58,9 @@ public class ratsControl : allCatsControl {
 
 	protected override void updateTiles(){
 		tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
-		tileScript.setRat (null);
+		tileScript.removeRat (transform.gameObject);
 		tileScript = tiles [newI, newJ].GetComponent<tileStuff> ();
-		tileScript.setRat (transform.gameObject);
+		tileScript.addRat (transform.gameObject);
 		currI = newI;
 		currJ = newJ;
 //		if (tileScript.hasAttackCat()) {

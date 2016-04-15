@@ -116,8 +116,6 @@ public class movment : MonoBehaviour {
 						setFallingDest ();
 					}
 				}
-//				checkDeletingCats ();
-				//		checkSpawningCats ();
 			}
 		} else {
 			
@@ -196,30 +194,6 @@ public class movment : MonoBehaviour {
 		}
 	}
 
-//	private void checkDeletingCats(){
-//		if (Input.GetMouseButtonUp(1)){
-//			int clickedI = gridCont.convertToTileCoord (camPos.x);
-//			int clickedJ = gridCont.convertToTileCoord (camPos.y);
-//			if (gridCont.onGrid(clickedI, clickedJ)){
-//				tileStuff tileScript = tiles [clickedI, clickedJ].GetComponent<tileStuff>();
-//				deleteLight.transform.position = new Vector2 (clickedI, clickedJ);
-//				inkLeft += tileScript.deleteAllCats (elevInkCost, attackInkCost);
-//				Debug.Log ("inkLeft: " + inkLeft);
-//				if (clickedI == boyTileI && clickedJ == boyTileJ) {
-//					int lowerJ = boyTileJ - 1;
-//					if (gridCont.onGrid (clickedI, lowerJ)) {
-//						tileStuff belowTile = tiles [clickedI, lowerJ].GetComponent<tileStuff> ();
-//						if (tileScript.getElevCat () == null && !belowTile.getIsPlatform()) {
-//							floating = true;
-//							dest = new Vector3 (clickedI, lowerJ, 0f);
-//							Debug.Log ("new dest gotta float no more elev cat");
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
-
 	public void spawnElevCat(){
 		bool cannotSpawn = false;
 		int nextInkLeft = inkLeft - elevInkCost;
@@ -262,44 +236,6 @@ public class movment : MonoBehaviour {
 			Debug.Log ("cannot spawn, show animation or sound as to why cannot spawn");
 		}
 	}
-
-//	private void checkSpawningCats(){
-////		int nextI = boyTileI;// - 1;
-////		int nextJ = boyTileJ;
-////		if (facingRight) {
-////			nextI = boyTileI + 1;
-////		}
-//		//a platform cat?
-//		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
-////		tileStuff belowTile = tiles [boyTileI, boyTileJ - 1].GetComponent < tileStuff> ();
-//		if (reachedDestination () && !tileScript.getIsPlatform ()) {
-//			if (spawningElevCat ()) {
-////			nextJ--;
-////			if (gridCont.onGrid (nextI, nextJ - 1)) {
-//				if (tileScript.getElevCat () == null) {
-//					tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
-//				}
-////			}
-//			} else if (spawningAttackCat ()) {
-//				tileScript.placeCat (attackCat, attackCatPrefab, gridCont.tileSize);
-//			}
-//		}
-//	}
-
-//	private bool spawningAttackCat(){
-//		if (Input.GetKeyUp ("2")) {
-//			attackCat = 2;
-//			return true;
-//		} else if (Input.GetKeyUp ("3")) {
-//			attackCat = 3;
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	private bool spawningElevCat(){
-//		return (Input.GetKeyUp ("1"));
-//	}
 
 	private void checkNewPos(){
 //		newDestIsValid = false;
