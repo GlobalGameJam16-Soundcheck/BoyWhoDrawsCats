@@ -121,31 +121,45 @@ public class gestureController : MonoBehaviour
 	private void checkSpawningAndDeleting(){
 		string gesture = spawn ();
 		if (gestureNames.Count > 0) {
-			if (gesture.Equals(gestureNames[4])){
+			if (gesture.Equals (gestureNames [0]) || gesture.Equals (gestureNames [1])) {
+				playerController.spawnElevCat ();
+			} else if (gesture.Equals (gestureNames [2])) {
+				playerController.spawnAttackCat (playerController.attackCatRight);
+			} else if (gesture.Equals (gestureNames [3])) {
+				playerController.spawnAttackCat (playerController.attackCatLeft);
+			} else if (gesture.Equals (gestureNames [6])) {
+				playerController.spawnYarnCat (playerController.yarnCatLeft);
+			} else if (gesture.Equals (gestureNames [5])) {
+				playerController.spawnYarnCat (playerController.yarnCatRight);
+			} else if (gesture.Equals(gestureNames[4])){
 				playerController.deleteCats ();
-			} else {
-				if (gesture.Equals (gestureNames [0]) || gesture.Equals (gestureNames [1])) {
-					playerController.spawnElevCat ();
-				} else if (gesture.Equals (gestureNames [2])) {
-					playerController.spawnAttackCat (playerController.attackCatRight);
-				} else if (gesture.Equals (gestureNames [3])) {
-					playerController.spawnAttackCat (playerController.attackCatLeft);
-				}
 			}
 		}
 	}
 
 	string spawn()
 	{
+		int save = -1;
 		for (int i = 0; i < gestures.Count; i++)
 		{
+//			if (tempStrokes.Equals(gestures[i]))
 			if (tempStrokes.Contains(gestures[i]))
 			{
-				tempStrokes = "";
-				return gestureNames[i];
+//				tempStrokes = "";
+//				return gestureNames[i];
+//				Debug.Log("save: " + save + " len: " + save.Length);
+//				Debug.Log ("check: " + gestures [i] + " len: " + gestures[i].Length);
+				if (save == -1 || gestures[save].Length < gestures[i].Length){
+//					Debug.Break ();
+					save = i;
+				}
 			}
 		}
 		tempStrokes = "";
+		if (save >= 0) {
+			Debug.Log ("returning: " + gestureNames[save]);
+			return gestureNames [save];
+		}
 		return "none";
 	}
 

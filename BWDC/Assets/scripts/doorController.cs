@@ -13,6 +13,7 @@ public class doorController : MonoBehaviour {
 	private GridControl gridCont;
 	private GameObject[,] tiles;
 	private SpriteRenderer mySprite;
+	private int doorDamage;
 
 	// Use this for initialization
 	void Start () {
@@ -27,6 +28,7 @@ public class doorController : MonoBehaviour {
 		mySprite = GetComponent<SpriteRenderer> ();
 		mySprite.color = startColor;
 		tileScript = tiles [tileI, tileJ].GetComponent<tileStuff>();
+		doorDamage = 1;
 		setActive ();
 	}
 
@@ -45,9 +47,14 @@ public class doorController : MonoBehaviour {
 	}
 
 	public void setActive(){
+		//fixme boy dies if he's on this tile?
 		inactive = false;
 		mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 1f);
 		tileScript.setDoor (true);
+//		GameObject boy = tileScript.getBoyTile ();
+//		if (boy != null) {
+//			boy.GetComponent<movment> ().getHit (doorDamage);
+//		}
 	}
 
 	public void setInactive(){

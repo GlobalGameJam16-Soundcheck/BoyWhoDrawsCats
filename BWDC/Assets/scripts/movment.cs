@@ -27,6 +27,8 @@ public class movment : MonoBehaviour {
 	private bool facingRight = true;
 	private int boyTileI;
 	private int boyTileJ;
+	private int oldTileI;
+	private int oldTileJ;
 	private int tileWidth;
 	private int tileHeight;
 //	private bool newDestIsValid = true;
@@ -52,6 +54,13 @@ public class movment : MonoBehaviour {
 	public int attackCatLeft = 3;
 	public int attackInkCost;
 
+	[Header("YarnCat")]
+	public GameObject yarnCatPrefab;
+	public int yarnCat = 4;
+	public int yarnCatRight = 4;
+	public int yarnCatLeft = 5;
+	public int yarnCatCost;
+
 	// Use this for initialization
 	void Start () {
 		gridCont = Camera.main.GetComponent<GridControl>();
@@ -61,6 +70,10 @@ public class movment : MonoBehaviour {
 		tileHeight = tiles.GetLength (1);
 		int xPos = gridCont.convertToTileCoord(transform.position.x);
 		int yPos = gridCont.convertToTileCoord(transform.position.y);
+		boyTileI = xPos;
+		boyTileJ = yPos;
+		oldTileI = boyTileI;
+		oldTileJ = boyTileJ;
 		dest = new Vector3 (xPos, yPos, 0f);
 //		mySprite = GetComponent<SpriteRenderer> ();
 //		rightSprite = mySprite.sprite;
@@ -81,6 +94,15 @@ public class movment : MonoBehaviour {
 				transform.position = Vector3.MoveTowards (transform.position, new Vector3 (dest.x, dest.y, 0), walkSpeed);
 				boyTileI = gridCont.convertToTileCoord (transform.position.x);
 				boyTileJ = gridCont.convertToTileCoord (transform.position.y);
+				if (oldTileI != boyTileI || oldTileJ != boyTileJ) {
+					tileStuff boyTile;
+					boyTile = tiles [oldTileI, oldTileJ].GetComponent<tileStuff> ();
+					boyTile.setBoyTile (null);
+					boyTile = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
+					boyTile.setBoyTile (transform.gameObject);
+				}
+				oldTileI = boyTileI;
+				oldTileJ = boyTileJ;
 				checkHitByRat ();
 			}
 			if (Input.GetMouseButton (0)) {
@@ -140,12 +162,15 @@ public class movment : MonoBehaviour {
 	private void checkHitByRat(){
 		GameObject ratObj = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ().getRat ();
 		if (ratObj != null) {
-			health -= ratObj.GetComponent<ratsControl>().getDamage ();
-			if (health <= 0) {
-//				Time.timeScale /= 2;
-				flashing = true;
-				Invoke ("death", 2f);
-			}
+			getHit(ratObj.GetComponent<ratsControl>().getDamage ());
+		}
+	}
+
+	public void getHit(int damage){
+		health -= damage;
+		if (health <= 0) {
+			flashing = true;
+			Invoke ("death", 2f);
 		}
 	}
 
@@ -178,7 +203,7 @@ public class movment : MonoBehaviour {
 		if (gridCont.onGrid(clickedI, clickedJ)){
 			tileStuff tileScript = tiles [clickedI, clickedJ].GetComponent<tileStuff>();
 			deleteLight.transform.position = new Vector2 (clickedI, clickedJ);
-			inkLeft += tileScript.deleteAllCats (elevInkCost, attackInkCost);
+			inkLeft += tileScript.deleteAllCats (elevInkCost, attackInkCost, yarnCatCost);
 			Debug.Log ("inkLeft: " + inkLeft);
 			if (clickedI == boyTileI && clickedJ == boyTileJ) {
 				int lowerJ = boyTileJ - 1;
@@ -197,7 +222,7 @@ public class movment : MonoBehaviour {
 	public void spawnElevCat(){
 		bool cannotSpawn = false;
 		int nextInkLeft = inkLeft - elevInkCost;
-		if (nextInkLeft <= 0) {
+		if (nextInkLeft < 0) {
 			Debug.Log ("no more ink");
 			return;
 		}
@@ -219,7 +244,7 @@ public class movment : MonoBehaviour {
 
 	public void spawnAttackCat(int ac){
 		int nextInkLeft = inkLeft - attackInkCost;
-		if (nextInkLeft <= 0) {
+		if (nextInkLeft < 0) {
 			Debug.Log ("no more ink");
 			return;
 		}
@@ -228,6 +253,26 @@ public class movment : MonoBehaviour {
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			tileScript.placeCat (attackCat, attackCatPrefab, gridCont.tileSize);
+			inkLeft = nextInkLeft;
+		} else {
+			cannotSpawn = true;
+		}
+		if (cannotSpawn) {
+			Debug.Log ("cannot spawn, show animation or sound as to why cannot spawn");
+		}
+	}
+
+	public void spawnYarnCat(int yc){
+		int nextInkLeft = inkLeft - attackInkCost;
+		if (nextInkLeft < 0) {
+			Debug.Log ("no more ink");
+			return;
+		}
+		yarnCat = yc;
+		bool cannotSpawn = false;
+		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
+		if (reachedDestination () && !tileScript.getIsPlatform ()) {
+			tileScript.placeCat (yarnCat, yarnCatPrefab, gridCont.tileSize);
 			inkLeft = nextInkLeft;
 		} else {
 			cannotSpawn = true;

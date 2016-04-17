@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GridControl : MonoBehaviour {
 
@@ -35,12 +36,16 @@ public class GridControl : MonoBehaviour {
         for (int x = 0; x < tileWidth; x++) {
             for(int y = 0; y < tileHeight; y++) {
 				bool isPlatform = false;
+				GameObject yarnObj = null;
 				string t = tempTiles [x, tileHeight - 1 - y];
+				if (!string.IsNullOrEmpty (t)) {
+					t = t.Trim ();
+				}
 				Debug.Log ("t is: " + t);
 				if (t == "b") { //platform
 					isPlatform = true;
 					tiles [x, y] = (GameObject)(Instantiate (tile, new Vector3 (x, y, 0), Quaternion.identity));
-				} else if (string.IsNullOrEmpty(t) || t == " " || t == "" || t == "r") { //blank
+				} else if (string.IsNullOrEmpty(t) || consistsOfWhiteSpace(t) || t == "r") { //blank
 					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
 					if (t == "r") { //rat
 						tiles [x, y].GetComponent<tileStuff> ().placeRat (rat, tileSize);
@@ -71,12 +76,21 @@ public class GridControl : MonoBehaviour {
 					GameObject newYarnObj = (GameObject)(Instantiate (yarn, new Vector3 (x, y, 0), Quaternion.identity));
 					yarnControl newYarn = newYarnObj.GetComponent<yarnControl> ();
 					newYarn.initialize (x, y, yarnDoorColors [yarnVal], yarnVal);
+					yarnObj = newYarnObj;
 				} else {
 //					Debug.Break ();
 				}
 				tiles [x, y].GetComponent<tileStuff> ().setIsPlatform (isPlatform);
+				tiles [x, y].GetComponent<tileStuff> ().setYarnObj (yarnObj);
             }
         }
+	}
+
+	private bool consistsOfWhiteSpace(string s){
+		foreach(char c in s){
+			if(c != ' ') return false;
+		}
+		return true;
 	}
 
 	void Update(){

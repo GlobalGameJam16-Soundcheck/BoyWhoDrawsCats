@@ -28,6 +28,10 @@ public class drawingController : MonoBehaviour {
 			playerController.spawnAttackCat (playerController.attackCatRight);
 		} else if (Input.GetKeyUp ("3")) {
 			playerController.spawnAttackCat (playerController.attackCatLeft);
+		} else if (Input.GetKeyUp ("4")) {
+			playerController.spawnYarnCat (playerController.yarnCatRight);
+		} else if (Input.GetKeyUp ("5")) {
+			playerController.spawnYarnCat (playerController.yarnCatLeft);
 		}
 	}
 }

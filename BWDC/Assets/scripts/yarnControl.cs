@@ -46,14 +46,14 @@ public class yarnControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (started) {
-			timer += Time.deltaTime;
-			if (timer > 5f && !one) {
-				activateDoors (false);
-				one = true;
-			} else if (timer > 10f && !two) {
-				activateDoors (true);
-				two = true;
-			}
+//			timer += Time.deltaTime;
+//			if (timer > 5f && !one) {
+//				activateDoors (false);
+//				one = true;
+//			} else if (timer > 10f && !two) {
+//				activateDoors (true);
+//				two = true;
+//			}
 		}
 	}
 
