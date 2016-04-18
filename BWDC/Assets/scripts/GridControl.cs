@@ -39,7 +39,7 @@ public class GridControl : MonoBehaviour {
             for(int y = 0; y < tileHeight; y++) {
 				bool isPlatform = false;
 				GameObject yarnObj = null;
-				string t = tempTiles [x, tileHeight - 1 - y];
+				string t = tempTiles [x, tileHeight - 1 - y].ToLower();
 				if (!string.IsNullOrEmpty (t)) {
 					t = t.Trim ();
 				}
