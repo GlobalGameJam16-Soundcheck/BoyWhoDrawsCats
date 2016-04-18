@@ -55,12 +55,21 @@ public class gestureController : MonoBehaviour
 		if (Input.GetMouseButton(0))
 		{
 			transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			transform.position = new Vector3(transform.position.x, transform.position.y, 0.0f);
 			if (!useRender) {
 				GameObject tip = (GameObject)Instantiate (penTip, transform.position, Quaternion.identity);
 				tipList.Add (tip);
 				tip.GetComponent<penTipControl> ().startTrail ();
-			} 
-			transform.position = new Vector3(transform.position.x, transform.position.y, 0.0f);
+				if (points.Count > 0) {
+//					Debug.Break ();
+					Vector2 endPoint = points [points.Count - 1];
+					Vector2 midPoint = new Vector2 ((transform.position.x + endPoint.x) / 2f,
+													(transform.position.y + endPoint.y)/2f);
+					tip = (GameObject)Instantiate (penTip, midPoint, Quaternion.identity);
+					tipList.Add (tip);
+					tip.GetComponent<penTipControl> ().startTrail ();
+				}
+			}
 			points.Add(new Vector2(transform.position.x, transform.position.y));
 		}
 		if (Input.GetMouseButtonUp(0))
@@ -112,7 +121,7 @@ public class gestureController : MonoBehaviour
 				{
 					Vector2 stroke = findStroke(tempPoints[i], tempPoints[i + 1]);
 					//Instantiate(testDot, tempPoints[i], Quaternion.identity);
-					//Debug.DrawLine(tempPoints[i], new Vector3(tempPoints[i].x + stroke.x, tempPoints[i].y + stroke.y, 0), Color.red, 50);
+//					Debug.DrawLine(tempPoints[i], new Vector3(tempPoints[i].x + stroke.x, tempPoints[i].y + stroke.y, 0), Color.red, 50);
 					strokes.Add(findStroke(tempPoints[i], tempPoints[i + 1]));
 				}
 			}

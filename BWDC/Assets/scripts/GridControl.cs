@@ -67,6 +67,8 @@ public class GridControl : MonoBehaviour {
 					int doorVal = int.Parse (tArr [1]);
 					GameObject newDoorObj = (GameObject)(Instantiate (door, new Vector3 (x, y, 0), Quaternion.identity));
 					doorController newDoor = newDoorObj.GetComponent<doorController> ();
+//					int active = int.Parse(tArr [2]);
+//					newDoor.initialize (x, y, yarnDoorColors [doorVal], doorVal, active);
 					newDoor.initialize (x, y, yarnDoorColors [doorVal], doorVal);
 					if (!doorDict.ContainsKey (doorVal)) {
 						doorDict.Add (doorVal, new List<GameObject> ());

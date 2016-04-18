@@ -39,6 +39,13 @@ public class doorController : MonoBehaviour {
 		tileJ = j;
 		startColor = c;
 		val = v;
+//		if (active == 1) {
+//			numOnYarn = 1;
+//			setActive ();
+//		} else {
+//			numOnYarn = 2;
+//			setInactive ();
+//		}
 	}
 	
 	// Update is called once per frame
