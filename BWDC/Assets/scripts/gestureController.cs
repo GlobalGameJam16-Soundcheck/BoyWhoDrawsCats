@@ -9,6 +9,8 @@ public class gestureController : MonoBehaviour
 	List<Vector2> tempPoints = new List<Vector2>();
 	List<Vector2> strokes = new List<Vector2>();
 	public GameObject penTip;
+	public GameObject penTipTrailRender;
+	public bool useRender;
 	string tempStrokes = "";
 	public List<string> gestures = new List<string>();
 	public List<string> gestureNames = new List<string>();
@@ -29,39 +31,48 @@ public class gestureController : MonoBehaviour
 		if (tablet) {
 			Cursor.visible = false;
 		}
-//		penTip.GetComponent<TrailRenderer> ().sortingLayerName = "trailLayer";
-//		penTip.GetComponent<TrailRenderer> ().sortingOrder = 2;
+		penTipTrailRender.GetComponent<TrailRenderer> ().sortingLayerName = "trailLayer";
+		penTipTrailRender.GetComponent<TrailRenderer> ().sortingOrder = 2;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
 		checkSpawningAndDeleting ();
-		if (playerController.mouseHoldTimer > 0) {
+		if (playerController.mouseHoldTimer > 0 && !useRender) {
 			return;
 		}
 		if (Input.GetMouseButtonDown(0))
 		{
-//			penTip.SetActive (true);
 			transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-//			penTip.transform.position = transform.position;
+			if (useRender) {
+				penTipTrailRender.SetActive (true);
+				penTipTrailRender.transform.position = new Vector3(transform.position.x, transform.position.y, -15f);
+				Debug.Log ("ADAD");
+//				Debug.Break ();
+			}
 		}
 		if (Input.GetMouseButton(0))
 		{
 			transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			GameObject tip = (GameObject)Instantiate (penTip, transform.position, Quaternion.identity);
-			tipList.Add (tip);
-			tip.GetComponent<penTipControl> ().startTrail ();
+			if (!useRender) {
+				GameObject tip = (GameObject)Instantiate (penTip, transform.position, Quaternion.identity);
+				tipList.Add (tip);
+				tip.GetComponent<penTipControl> ().startTrail ();
+			} 
 			transform.position = new Vector3(transform.position.x, transform.position.y, 0.0f);
 			points.Add(new Vector2(transform.position.x, transform.position.y));
 		}
 		if (Input.GetMouseButtonUp(0))
 		{
-			foreach (GameObject tip in tipList) {
-				Destroy (tip);
+			if (useRender) {
+				penTipTrailRender.SetActive (false);
+			} else {
+				foreach (GameObject tip in tipList) {
+					Destroy (tip);
+				}
+				tipList = new List<GameObject> ();
 			}
-			tipList = new List<GameObject> ();
-//			penTip.SetActive (false);
 			float angleSum = 0;
 			int connerSize = 5;
 			for (int i = 2; i < points.Count - connerSize; i++)

@@ -83,6 +83,11 @@ public class movment : MonoBehaviour {
 		flashTimer = 0.1f;
 		origFlashTimer = flashTimer;
     }
+
+	public void initialize(Vector3 pos){
+		transform.position = pos;
+		transform.gameObject.SetActive (true);
+	}
 	
 	// Update is called once per frame
 	void Update () {

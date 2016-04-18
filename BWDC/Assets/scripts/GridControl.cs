@@ -22,6 +22,8 @@ public class GridControl : MonoBehaviour {
 	public GameObject yarn;
 	public GameObject door;
 
+	public GameObject boy;
+
 	private Dictionary<int, List<GameObject>> doorDict;
 
     // Use this for initialization
@@ -52,6 +54,7 @@ public class GridControl : MonoBehaviour {
 					}
 				} else if (t == "s") { //start
 					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
+					boy.GetComponent<movment> ().initialize (new Vector3 (x, y, 0));
 				} else if (t == "e") { //end
 					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
 				} else if (!string.IsNullOrEmpty (t) && t.Length > 1 && t.Contains ("d")) { //door
