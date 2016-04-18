@@ -1,0 +1,11 @@
+b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b
+b, , , , , , , , , , , , , , , , ,b
+b, , , , , , , , , , , , , ,d-0, , ,b
+b, , , , , , , , , , , , , ,d-0, , ,b
+b, , , , , , , , , , , , , ,d-0, , ,b
+b,s, , , , ,,,,,,,y-1, ,d-0, ,e,b
+b,b,b,b,b,b,d-1,d-1,d-1,d-1,d-1,b,b,b,b,b,b,b
+b,b,b,b,b,b, , , , , ,b,b,b,b,b,b,b
+b,b,b,b,b,b, , , ,y-0, ,b,b,b,b,b,b,b
+b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b
+b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b
