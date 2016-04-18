@@ -20,7 +20,7 @@ public class yarnCatControl : allCatsControl {
 		reachedYarnFirstTime = false;
 		//		movingTimer -= 0.1f;
 		movingTimer /= 2f;
-		moveSpeed /= 1.5f;
+		moveSpeed /= 2f;
 		origMovingTimer = movingTimer;
 //		currI = gridCont.convertToTileCoord (transform.position.x);
 //		currJ = gridCont.convertToTileCoord (transform.position.y);
@@ -42,7 +42,7 @@ public class yarnCatControl : allCatsControl {
 					//						playWithYarn ();
 				}
 			}
-			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed / 3);
+			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
 			changeSprite ();
 			base.updateTilePos ();
 		}

@@ -14,6 +14,7 @@ public class doorController : MonoBehaviour {
 	private GameObject[,] tiles;
 	private SpriteRenderer mySprite;
 	private int doorDamage;
+	private int numOnYarn;
 
 	// Use this for initialization
 	void Start () {
@@ -29,6 +30,7 @@ public class doorController : MonoBehaviour {
 		mySprite.color = startColor;
 		tileScript = tiles [tileI, tileJ].GetComponent<tileStuff>();
 		doorDamage = 1;
+		numOnYarn = 1;
 		setActive ();
 	}
 
@@ -47,20 +49,21 @@ public class doorController : MonoBehaviour {
 	}
 
 	public void setActive(){
-		//fixme boy dies if he's on this tile?
-		inactive = false;
-		mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 1f);
-		tileScript.setDoor (true);
-//		GameObject boy = tileScript.getBoyTile ();
-//		if (boy != null) {
-//			boy.GetComponent<movment> ().getHit (doorDamage);
-//		}
+		numOnYarn--;
+		if (numOnYarn == 0) {
+			inactive = false;
+			mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 1f);
+			tileScript.setDoor (true);
+		}
 	}
 
 	public void setInactive(){
-		inactive = true;
-		mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 0.2f);
-		tileScript.setDoor (false);
+		numOnYarn++;
+		if (numOnYarn > 0) {
+			inactive = true;
+			mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 0.2f);
+			tileScript.setDoor (false);
+		}
 	}
 
 }

@@ -2,10 +2,10 @@ b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b
 b  ,   ,   ,   ,   ,   ,   ,   ,   ,   ,d-1,   ,   ,   ,r  ,   ,e  ,b
 b  ,   ,   ,   ,   ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,   ,b  ,b  ,b  ,b  ,b  
 b  ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,b  
-b  ,   ,   ,   ,   ,   ,d-0,d-0,   ,   ,   ,   ,   ,   ,   ,   ,   ,b
+b  ,   ,   ,   ,   ,   ,d-0,d-0,   ,   ,   ,   ,   ,   ,   ,d-0,   ,b
 b  ,   ,   ,   ,r  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,   ,b  ,b  ,b  ,b  
 b  ,b  ,b  ,   ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,   ,b  ,b  ,b  ,b  
 b  ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,b  
-b  ,s  ,   ,   ,   ,   ,y-0,b  ,   ,   ,r  ,   ,y-1,b  ,b  ,b  ,b  ,b
+b  ,s  ,   ,y-0,   ,   ,y-0,b  ,   ,   ,r  ,   ,y-1,b  ,b  ,b  ,b  ,b
 b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  
 b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  ,b  
