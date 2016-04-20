@@ -9,6 +9,9 @@ public class elevCatControl : allCatsControl {
 	public bool moving { get; set; }
 	public bool actuallyMoving { get; set; }
 	private Vector2 oldPos;
+	public GameObject[] legs;
+	private int initI;
+	private int initJ;
 
 	// Use this for initialization
 	void Start () {
@@ -19,12 +22,15 @@ public class elevCatControl : allCatsControl {
 		moving = false;
 		actuallyMoving = false;
 		oldPos = transform.position;
+		initI = gridCont.convertToTileCoord (transform.position.x);
+		initJ = gridCont.convertToTileCoord (transform.position.y);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (timeIsNormal ()) {
 			base.updateTilePos ();
+			checkLegs ();
 			if (!moving) {
 				if (transform.parent == null) {
 					tileSpot = new Vector2 (newI, newJ - gridCont.tileSize / 3);
@@ -36,6 +42,16 @@ public class elevCatControl : allCatsControl {
 				transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
 			}
 			checkMoving (newI, newJ);
+		}
+	}
+
+	private void checkLegs(){
+		for (int i = 0; i < legs.Length; i++) {
+			if (i < (currJ - initJ)) {
+				legs [i].SetActive (true);
+			} else {
+				legs [i].SetActive (false);
+			}
 		}
 	}
 
