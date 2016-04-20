@@ -31,7 +31,14 @@ public class yarnCatControl : allCatsControl {
 		if (timeIsNormal ()) {
 			if (!onYarn) {
 				if (!floating && !falling) {
-					moveForwards ();
+					tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
+					tileStuff belowTile = tiles [currI, currJ - 1].GetComponent<tileStuff> ();
+					if (belowTile.getIsPlatform () || tileScript.getElevCat () != null) {
+						moveForwards ();
+					} else {
+						floating = true;
+						fallDownwards ();
+					}
 				} else {
 					fallDownwards ();
 				}

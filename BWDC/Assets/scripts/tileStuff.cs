@@ -7,6 +7,10 @@ public class tileStuff : MonoBehaviour {
 	public bool isPlatform = false;
 	public bool canRemoveCat = false;
 
+	//[Header("end")]
+	public bool isEnd = false;
+	private GameObject endObj;
+
 	//[Header("boy")]
 	public bool isBoyTile = false;
 	private GameObject boy;
@@ -48,6 +52,10 @@ public class tileStuff : MonoBehaviour {
 		}
 		checkCanRemoveCat ();
 		checkIsBoyTile ();
+		checkIsEnd ();
+		if (isBoyTile && isEnd) {
+			endObj.GetComponent<endControl> ().hitEnd ();
+		}
 	}
 
 	public void setBoyTile(GameObject boyGam){
@@ -56,6 +64,14 @@ public class tileStuff : MonoBehaviour {
 
 	public GameObject getBoyTile(){
 		return boy;
+	}
+
+	public void setEndTile(GameObject endGam){
+		endObj = endGam;
+	}
+
+	private void checkIsEnd(){
+		isEnd = (endObj != null);
 	}
 
 	private void checkIsBoyTile(){

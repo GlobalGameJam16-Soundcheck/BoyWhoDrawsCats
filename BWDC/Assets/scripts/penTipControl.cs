@@ -12,6 +12,7 @@ public class penTipControl : MonoBehaviour {
 		transform.gameObject.SetActive (true);
 		Destroy (transform.gameObject, 1f);
 		mySprite = GetComponent<SpriteRenderer> ();
+		transform.Rotate (new Vector3 (0f, 0f, 45f));
 	}
 //	void Start () {
 //		

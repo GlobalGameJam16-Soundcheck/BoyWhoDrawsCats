@@ -23,6 +23,7 @@ public class GridControl : MonoBehaviour {
 	public GameObject door;
 
 	public GameObject boy;
+	public GameObject endPrefab;
 
 	private Dictionary<int, List<GameObject>> doorDict;
 
@@ -39,6 +40,7 @@ public class GridControl : MonoBehaviour {
             for(int y = 0; y < tileHeight; y++) {
 				bool isPlatform = false;
 				GameObject yarnObj = null;
+				GameObject endObj = null;
 				string t = tempTiles [x, tileHeight - 1 - y];
 				if (!string.IsNullOrEmpty (t)) {
 					t = t.ToLower ();
@@ -58,6 +60,7 @@ public class GridControl : MonoBehaviour {
 					boy.GetComponent<movment> ().initialize (new Vector3 (x, y, 0));
 				} else if (t == "e") { //end
 					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
+					endObj = (GameObject)(Instantiate (endPrefab, new Vector3 (x, y, 0), Quaternion.identity));
 				} else if (!string.IsNullOrEmpty (t) && t.Length > 1 && t.Contains ("d")) { //door
 //					Debug.Break ();
 					//this is a door that the yarn contains
@@ -88,6 +91,7 @@ public class GridControl : MonoBehaviour {
 				}
 				tiles [x, y].GetComponent<tileStuff> ().setIsPlatform (isPlatform);
 				tiles [x, y].GetComponent<tileStuff> ().setYarnObj (yarnObj);
+				tiles [x, y].GetComponent<tileStuff> ().setEndTile (endObj);
             }
         }
 	}

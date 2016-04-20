@@ -10,11 +10,14 @@ public class gestureController : MonoBehaviour
 	List<Vector2> strokes = new List<Vector2>();
 	public GameObject penTip;
 	public GameObject penTipTrailRender;
+	public GameObject penTipLineRender;
+	private LineRenderer myLine;
 	public bool useRender;
 	string tempStrokes = "";
 	public List<string> gestures = new List<string>();
 	public List<string> gestureNames = new List<string>();
 	private List<GameObject> tipList = new List<GameObject> ();
+	private float zPos = -5f;
 	//public GameObject testDot;
 
 
@@ -33,29 +36,24 @@ public class gestureController : MonoBehaviour
 		}
 		penTipTrailRender.GetComponent<TrailRenderer> ().sortingLayerName = "trailLayer";
 		penTipTrailRender.GetComponent<TrailRenderer> ().sortingOrder = 2;
+//		myLine = penTipLineRender.GetComponent<LineRenderer>();
+//		myLine.sortingLayerName = "trailLayer";
+//		myLine.sortingOrder = 2;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
 		checkSpawningAndDeleting ();
-		if (playerController.mouseHoldTimer > 0 && !useRender) {
+		if (playerController.mouseHoldTimer > 0){// && !useRender) {
+//			myLine.enabled = false;
 			return;
-		}
-		if (Input.GetMouseButtonDown(0))
-		{
-			transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			if (useRender) {
-				penTipTrailRender.SetActive (true);
-				penTipTrailRender.transform.position = new Vector3(transform.position.x, transform.position.y, -15f);
-				Debug.Log ("ADAD");
-//				Debug.Break ();
-			}
 		}
 		if (Input.GetMouseButton(0))
 		{
 			transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			transform.position = new Vector3(transform.position.x, transform.position.y, 0.0f);
+			transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
+
 			if (!useRender) {
 				GameObject tip = (GameObject)Instantiate (penTip, transform.position, Quaternion.identity);
 				tipList.Add (tip);
@@ -64,18 +62,38 @@ public class gestureController : MonoBehaviour
 //					Debug.Break ();
 					Vector2 endPoint = points [points.Count - 1];
 					Vector2 midPoint = new Vector2 ((transform.position.x + endPoint.x) / 2f,
-													(transform.position.y + endPoint.y)/2f);
+						                   (transform.position.y + endPoint.y) / 2f);
 					tip = (GameObject)Instantiate (penTip, midPoint, Quaternion.identity);
 					tipList.Add (tip);
 					tip.GetComponent<penTipControl> ().startTrail ();
 				}
+			} else {
+//				myLine.enabled = true;
+				penTipTrailRender.SetActive (true);
+				penTipTrailRender.transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
 			}
 			points.Add(new Vector2(transform.position.x, transform.position.y));
+			if (useRender) {
+//				float width = 0.5f;
+//				myLine.SetWidth (width, width);
+//				myLine.SetColors (Color.black, Color.black);
+//				myLine.SetVertexCount (points.Count);
+//				Vector3[] linePoints = new Vector3[points.Count];
+//				for (int i = 0; i < points.Count; i++) {
+//					linePoints [i] = new Vector3 (points [i].x, points [i].y, zPos);
+//				}
+//				myLine.SetPositions (linePoints);
+			}
 		}
 		if (Input.GetMouseButtonUp(0))
 		{
 			if (useRender) {
+				penTipTrailRender.transform.position = new Vector3 (penTipTrailRender.transform.position.x, 
+					penTipTrailRender.transform.position.y, zPos * 5);
 				penTipTrailRender.SetActive (false);
+//				myLine.SetPositions(new Vector3[0]);
+//				myLine.SetVertexCount (0);
+//				myLine.enabled = false;
 			} else {
 				foreach (GameObject tip in tipList) {
 					Destroy (tip);
