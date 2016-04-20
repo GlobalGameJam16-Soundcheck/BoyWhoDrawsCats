@@ -7,6 +7,7 @@ public class attackCatControl : allCatsControl {
 	private SpriteRenderer mySprite;
 	private bool floating;
 	private bool falling;
+	private float origMoveSpeed;
 
 	// Use this for initialization
 	void Start () {
@@ -17,6 +18,7 @@ public class attackCatControl : allCatsControl {
 //		movingTimer -= 0.1f;
 		movingTimer /= 2f;
 		moveSpeed = moveSpeed / 2;
+		origMoveSpeed = moveSpeed;
 		origMovingTimer = movingTimer;
 		currI = gridCont.convertToTileCoord (transform.position.x);
 		currJ = gridCont.convertToTileCoord (transform.position.y);
@@ -28,7 +30,13 @@ public class attackCatControl : allCatsControl {
 			if (!floating && !falling) {
 				tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
 				tileStuff belowTile = tiles [currI, currJ - 1].GetComponent<tileStuff> ();
-				if (belowTile.getIsPlatform () || tileScript.getElevCat () != null) {
+				GameObject elevCat = tileScript.getElevCat ();
+				if (belowTile.getIsPlatform () || elevCat != null) {
+					if (elevCat == null || belowTile.getIsPlatform ()) {
+						moveSpeed = origMoveSpeed;
+					} else {
+						moveSpeed = origMoveSpeed / 2f;
+					}
 					moveForwards ();
 				} else {
 					floating = true;

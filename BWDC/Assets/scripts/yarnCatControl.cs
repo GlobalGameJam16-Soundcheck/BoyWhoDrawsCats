@@ -9,6 +9,7 @@ public class yarnCatControl : allCatsControl {
 	private bool falling;
 	private bool onYarn;
 	private bool reachedYarnFirstTime;
+	private float origMoveSpeed;
 
 	// Use this for initialization
 	void Start () {
@@ -21,6 +22,7 @@ public class yarnCatControl : allCatsControl {
 		//		movingTimer -= 0.1f;
 		movingTimer /= 2f;
 		moveSpeed /= 2f;
+		origMoveSpeed = moveSpeed;
 		origMovingTimer = movingTimer;
 //		currI = gridCont.convertToTileCoord (transform.position.x);
 //		currJ = gridCont.convertToTileCoord (transform.position.y);
@@ -33,7 +35,13 @@ public class yarnCatControl : allCatsControl {
 				if (!floating && !falling) {
 					tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
 					tileStuff belowTile = tiles [currI, currJ - 1].GetComponent<tileStuff> ();
-					if (belowTile.getIsPlatform () || tileScript.getElevCat () != null) {
+					GameObject elevCat = tileScript.getElevCat ();
+					if (belowTile.getIsPlatform () || elevCat != null) {
+						if (elevCat == null || belowTile.getIsPlatform ()) {
+							moveSpeed = origMoveSpeed;
+						} else {
+							moveSpeed = origMoveSpeed / 2f;
+						}
 						moveForwards ();
 					} else {
 						floating = true;
