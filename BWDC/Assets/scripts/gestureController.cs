@@ -127,7 +127,9 @@ public class gestureController : MonoBehaviour
 					i += connerSize;
 				}
 			}
-			tempPoints.Add(points[points.Count-1]);
+			if (points.Count > 0) {
+				tempPoints.Add (points [points.Count - 1]);
+			}
 
 			if (tempPoints.Count >= 2)
 			{
