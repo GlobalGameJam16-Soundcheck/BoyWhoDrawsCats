@@ -159,16 +159,20 @@ public class gestureController : MonoBehaviour
 	private void checkSpawningAndDeleting(){
 		string gesture = spawn ();
 		if (gestureNames.Count > 0) {
+            //elevator cat
 			if (gesture.Equals (gestureNames [0]) || gesture.Equals (gestureNames [1])) {
 				playerController.spawnElevCat ();
+            //attack cat
 			} else if (gesture.Equals (gestureNames [2])) {
 				playerController.spawnAttackCat (playerController.attackCatRight);
 			} else if (gesture.Equals (gestureNames [3])) {
 				playerController.spawnAttackCat (playerController.attackCatLeft);
-			} else if (gesture.Equals (gestureNames [6])) {
+            //yarn cat
+			} else if (gesture.Equals (gestureNames [9]) || gesture.Equals(gestureNames[10]) || gesture.Equals(gestureNames[11]) || gesture.Equals(gestureNames[12])) {
 				playerController.spawnYarnCat (playerController.yarnCatLeft);
-			} else if (gesture.Equals (gestureNames [5])) {
+			} else if (gesture.Equals (gestureNames [5]) || gesture.Equals(gestureNames[6]) || gesture.Equals(gestureNames[7]) || gesture.Equals(gestureNames[8])) {
 				playerController.spawnYarnCat (playerController.yarnCatRight);
+            //delete cat
 			} else if (gesture.Equals(gestureNames[4])){
 				playerController.deleteCats ();
 			}
@@ -205,14 +209,14 @@ public class gestureController : MonoBehaviour
 	{
 		Vector2 stroke = new Vector2(0,0);
 		float angle = Vector2.Angle(p1, p2);
-		if(p1.x < p2.x)
-		{
-			stroke = new Vector2(1, stroke.y);
-		}
-		else
-		{
-			stroke = new Vector2(-1, stroke.y);
-		}
+        if (p1.x < p2.x)
+        {
+            stroke = new Vector2(1, stroke.y);
+        }
+        else if (p1.x > p2.x)
+        {
+            stroke = new Vector2(-1, stroke.y);
+        }
 		//if (Mathf.Abs(p1.x - p2.x) < Mathf.Abs(p1.y - p2.y))
 		//{
 		//    stroke = new Vector2(stroke.x, 0);
@@ -222,7 +226,7 @@ public class gestureController : MonoBehaviour
 		{
 			stroke = new Vector2(stroke.x, -1);
 		}
-		else
+		else if(p1.y < p2.y)
 		{
 			stroke = new Vector2(stroke.x, 1);
 		}
