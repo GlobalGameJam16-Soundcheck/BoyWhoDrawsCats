@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class movment : MonoBehaviour {
 
@@ -11,7 +12,7 @@ public class movment : MonoBehaviour {
 	public GameObject drawingOn;
 	public float mouseHoldTimer { get; set; }
 	private float origMouseHoldTimer;
-	public int inkLeft;
+	public int inkLeft = 200;
 	public int health;
 	private bool flashing;
 	private float flashTimer;
@@ -61,6 +62,11 @@ public class movment : MonoBehaviour {
 	public int yarnCatLeft = 5;
 	public int yarnCatCost;
 
+	[Header("tutorialStuff")]
+	public GameObject tutorialSigns;
+	private int sceneIndex;
+	public int numTutorials = 4;
+
 	// Use this for initialization
 	void Start () {
 		gridCont = Camera.main.GetComponent<GridControl>();
@@ -82,6 +88,7 @@ public class movment : MonoBehaviour {
 		mySprite = GetComponent<SpriteRenderer> ();
 		flashTimer = 0.1f;
 		origFlashTimer = flashTimer;
+		sceneIndex = SceneManager.GetActiveScene ().buildIndex;
     }
 
 	public void initialize(Vector3 pos){
@@ -234,6 +241,9 @@ public class movment : MonoBehaviour {
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			if (tileScript.getElevCat () == null) {
+				if (sceneIndex == gridCont.elevCatScene) {
+					tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+				}
 				tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
 				inkLeft = nextInkLeft;
 			} else {
@@ -258,6 +268,9 @@ public class movment : MonoBehaviour {
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			tileScript.placeCat (attackCat, attackCatPrefab, gridCont.tileSize);
+			if (sceneIndex == gridCont.attackCatScene) {
+				tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+			}
 			inkLeft = nextInkLeft;
 		} else {
 			cannotSpawn = true;
@@ -278,6 +291,9 @@ public class movment : MonoBehaviour {
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			tileScript.placeCat (yarnCat, yarnCatPrefab, gridCont.tileSize);
+			if (sceneIndex == gridCont.yarnCatScene) {
+				tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+			}
 			inkLeft = nextInkLeft;
 		} else {
 			cannotSpawn = true;
@@ -293,6 +309,9 @@ public class movment : MonoBehaviour {
 		int i = gridCont.convertToTileCoord (camPos.x);
 		int j = gridCont.convertToTileCoord (transform.position.y);
 		int checkVertj = gridCont.convertToTileCoord(camPos.y);
+		if (sceneIndex == gridCont.tapScene && (i != boyTileI || j != checkVertj) && tutorialSigns != null){
+			tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+		}
 		tileScript = tiles [i, checkVertj].GetComponent<tileStuff> ();
 		bool moveElevCat = false;
 //		if (!tileScript.hasACat ()) { //don't want player to move if despawning a cat;

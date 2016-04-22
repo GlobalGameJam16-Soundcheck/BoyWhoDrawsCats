@@ -18,6 +18,7 @@ public class tileStuff : MonoBehaviour {
 	//[Header("ElevatorCat")]
 	public GameObject elevCatObj { get; set; }
 	public int elevCat = 1; //?
+	public bool elevCatCanReach { get; set; }
 
 	//[Header("AttackCat")]
 	public List<GameObject> attackCatObjs;

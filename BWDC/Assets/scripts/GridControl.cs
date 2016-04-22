@@ -27,6 +27,11 @@ public class GridControl : MonoBehaviour {
 
 	private Dictionary<int, List<GameObject>> doorDict;
 
+	public int tapScene = 0;
+	public int elevCatScene = 1;
+	public int yarnCatScene = 2;
+	public int attackCatScene = 3;
+
     // Use this for initialization
     void Start () {
 		tileSize = 1f;

@@ -162,7 +162,8 @@ public class gestureController : MonoBehaviour
 		string gesture = spawn ();
 		if (gestureNames.Count > 0) {
             //elevator cat
-			if (gesture.Equals (gestureNames [0]) || gesture.Equals (gestureNames [1])) {
+			if (gesture.Equals (gestureNames [0]) || gesture.Equals (gestureNames [1]) || 
+				gesture.Equals(gestureNames[13]) || gesture.Equals(gestureNames[14])) {
 				playerController.spawnElevCat ();
             //attack cat
 			} else if (gesture.Equals (gestureNames [2])) {
@@ -170,9 +171,11 @@ public class gestureController : MonoBehaviour
 			} else if (gesture.Equals (gestureNames [3])) {
 				playerController.spawnAttackCat (playerController.attackCatLeft);
             //yarn cat
-			} else if (gesture.Equals (gestureNames [9]) || gesture.Equals(gestureNames[10]) || gesture.Equals(gestureNames[11]) || gesture.Equals(gestureNames[12])) {
+			} else if (gesture.Equals (gestureNames [9]) || gesture.Equals(gestureNames[10]) || 
+						gesture.Equals(gestureNames[11]) || gesture.Equals(gestureNames[12])) {
 				playerController.spawnYarnCat (playerController.yarnCatLeft);
-			} else if (gesture.Equals (gestureNames [5]) || gesture.Equals(gestureNames[6]) || gesture.Equals(gestureNames[7]) || gesture.Equals(gestureNames[8])) {
+			} else if (gesture.Equals (gestureNames [5]) || gesture.Equals(gestureNames[6]) || 
+						gesture.Equals(gestureNames[7]) || gesture.Equals(gestureNames[8])) {
 				playerController.spawnYarnCat (playerController.yarnCatRight);
             //delete cat
 			} else if (gesture.Equals(gestureNames[4])){
