@@ -19,6 +19,7 @@ public class elevCatControl : allCatsControl {
 		jRange = 3;
 		maxJ = currJ + jRange;
 		minJ = currJ - jRange;
+		moveSpeed = 3f;
 		moving = false;
 		actuallyMoving = false;
 		oldPos = transform.position;
@@ -34,12 +35,13 @@ public class elevCatControl : allCatsControl {
 			if (!moving) {
 				if (transform.parent == null) {
 					tileSpot = new Vector2 (newI, newJ - gridCont.tileSize / 3);
-					transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
+					moveCat (moveSpeed);
 				} else {
 					//fixme make sure i'm at the bottom of the boy's tile if the boy isnt moving i guess
 				}
 			} else {
-				transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
+//				transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
+				moveCat(moveSpeed);
 			}
 			checkMoving (newI, newJ);
 		}

@@ -16,8 +16,8 @@ public class attackCatControl : allCatsControl {
 		floating = false;
 		falling = false;
 //		movingTimer -= 0.1f;
-		movingTimer /= 2f;
-		moveSpeed = moveSpeed / 2;
+		movingTimer /= 2.5f;
+		moveSpeed = moveSpeed / 1.5f;
 		origMoveSpeed = moveSpeed;
 		origMovingTimer = movingTimer;
 		currI = gridCont.convertToTileCoord (transform.position.x);
@@ -45,7 +45,7 @@ public class attackCatControl : allCatsControl {
 			} else {
 				fallDownwards ();
 			}
-			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
+			moveCat (moveSpeed);
 			changeSprite ();
 			base.updateTilePos ();
 		}

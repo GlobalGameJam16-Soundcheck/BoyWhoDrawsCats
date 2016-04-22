@@ -26,7 +26,8 @@ public class allCatsControl : MonoBehaviour {
 		currJ = gridCont.convertToTileCoord (transform.position.y);
 		newI = currI;
 		newJ = currJ;
-		moveSpeed = 0.07f;
+//		moveSpeed = 0.07f;
+		moveSpeed = 4f;
 		movingTimer = 0.5f;
 		origMovingTimer = movingTimer;
 	}
@@ -52,6 +53,16 @@ public class allCatsControl : MonoBehaviour {
 
 	protected virtual void updateTiles (){
 		
+	}
+
+	protected virtual void moveCat(float speed){
+//		transform.position = Vector2.MoveTowards (transform.position, tileSpot, speed);
+		float epsilon = 0.05f;
+		if (Vector2.Distance (transform.position, tileSpot) > epsilon) {
+			Vector2 dir = (Vector2)tileSpot - (Vector2)transform.position;
+			dir = dir.normalized * speed;
+			transform.position = (Vector2)transform.position + dir * Time.deltaTime;
+		}
 	}
 
 }

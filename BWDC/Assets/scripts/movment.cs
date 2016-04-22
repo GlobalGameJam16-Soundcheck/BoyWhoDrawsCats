@@ -23,6 +23,7 @@ public class movment : MonoBehaviour {
 
     Vector3 dest;
     private float walkSpeed = 0.07f;
+	private float velo = 5f;
     GridControl gridCont;
 	private GameObject[,] tiles;
 	private bool facingRight = true;
@@ -37,7 +38,7 @@ public class movment : MonoBehaviour {
 
 	[Header("ElevatorCat")]
 	public GameObject elevCatPrefab;
-	private bool usingElevator = false;
+	public bool usingElevator = false;
 	private bool falling = false;
 	private bool floating = true;
 	private bool goingUp;
@@ -103,7 +104,7 @@ public class movment : MonoBehaviour {
 		if (health > 0){
 			changeSprite ();
 			if (!gridCont.gamePaused) {
-				transform.position = Vector3.MoveTowards (transform.position, new Vector3 (dest.x, dest.y, 0), walkSpeed);
+				moveBoy ();
 				boyTileI = gridCont.convertToTileCoord (transform.position.x);
 				boyTileJ = gridCont.convertToTileCoord (transform.position.y);
 				if (oldTileI != boyTileI || oldTileJ != boyTileJ) {
@@ -127,6 +128,7 @@ public class movment : MonoBehaviour {
 					}
 				}
 			}
+//			checkBoyFloating ();
 	        if (Input.GetMouseButtonUp(0)) {
 				gridCont.gamePaused = false;
 				if (drawingOn.activeInHierarchy) {
@@ -155,6 +157,30 @@ public class movment : MonoBehaviour {
 			
 		}
     }
+
+	private void moveBoy(){
+//		transform.position = Vector3.MoveTowards (transform.position, new Vector3 (dest.x, dest.y, 0), walkSpeed);
+		float epsilon = 0.05f;
+		if (Vector2.Distance (transform.position, dest) > epsilon) {
+			Vector3 dir = dest - transform.position;
+			dir = dir.normalized * velo;
+			transform.position = transform.position + dir * Time.deltaTime;
+		}
+	}
+
+//	private void checkBoyFloating(){
+//		if (!floating && !falling) {
+//			tileStuff currTile = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
+//			tileStuff belowTile = tiles [boyTileI, boyTileJ - 1].GetComponent<tileStuff> ();
+//			if ((currRidingCat == null || currRidingCat.gameObject == null) && !belowTile.getIsPlatform ()) {
+//				floating = true;
+//			}
+//		}
+//	}
+
+	public void setFloating(bool f){
+		floating = f;
+	}
 
 	private void checkGotHit(){
 		if (flashing) {
@@ -231,8 +257,26 @@ public class movment : MonoBehaviour {
 		}
 	}
 
+	private bool foundElevCatAbove(){
+		int j = boyTileJ;
+		int numSearched = 0;
+		int jRange = 3;
+		while (numSearched <= jRange) {
+			if (!gridCont.onGrid (boyTileI, j)) {
+				return false;
+			}
+			tileStuff tileScript = tiles [boyTileI, j].GetComponent<tileStuff> ();
+			if (tileScript.getElevCat () != null) {
+				return true;
+			}
+			j++;
+			numSearched++;
+		}
+		return false;
+	}
+
 	public void spawnElevCat(){
-		bool cannotSpawn = false;
+		bool cannotSpawn = true;
 		int nextInkLeft = inkLeft - elevInkCost;
 		if (nextInkLeft < 0) {
 			Debug.Log ("no more ink");
@@ -241,16 +285,15 @@ public class movment : MonoBehaviour {
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			if (tileScript.getElevCat () == null) {
-				if (sceneIndex == gridCont.elevCatScene) {
-					tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+				if (!foundElevCatAbove ()) {
+					if (sceneIndex == gridCont.elevCatScene) {
+						tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+					}
+					tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
+					inkLeft = nextInkLeft;
+					cannotSpawn = false;
 				}
-				tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
-				inkLeft = nextInkLeft;
-			} else {
-				cannotSpawn = true;
 			}
-		} else {
-			cannotSpawn = true;
 		}
 		if (cannotSpawn) {
 			Debug.Log ("cannot spawn, show animation or sound as to why cannot spawn");
@@ -328,6 +371,7 @@ public class movment : MonoBehaviour {
 				if (!ecc.moving) {
 					Debug.Log ("cat not moving rn");
 					j = checkVertj;
+//					Debug.Break ();
 					currRidingCat = elevCatObj.transform;
 					currRidingCat.SetParent (transform);
 					elevCatMaxJ = ecc.maxJ;
@@ -370,7 +414,7 @@ public class movment : MonoBehaviour {
 				facingRight = (i > boyTileI);
 			}
 			dest = potential;
-//			Debug.Log ("dest: " + dest + " curr:" + transform.position);
+			Debug.Log ("dest: " + dest + " curr:" + transform.position);
 		}
 		highlight.transform.position = new Vector3 (gridCont.convertToTileCoord (camPos.x), gridCont.convertToTileCoord (camPos.y), 0f);
 	}

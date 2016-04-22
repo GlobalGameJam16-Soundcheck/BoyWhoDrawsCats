@@ -43,7 +43,8 @@ public class ratsControl : allCatsControl {
 		if (started && timeIsNormal()) {
 			base.updateTilePos ();
 			moveForwards ();
-			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed / speedDenom);
+			float speed = moveSpeed / speedDenom;
+			moveCat (speed);
 			changeSprite ();
 		}
 	}
@@ -70,12 +71,16 @@ public class ratsControl : allCatsControl {
 	}
 
 	private void moveForwards(){
-		if (falling) {
-			Debug.Log ("checkFalling");
-			falling = checkFalling ();
-			if (falling) {
-				return;
-			}
+//		if (falling) {
+//			Debug.Log ("checkFalling");
+//			falling = checkFalling ();
+//			if (falling) {
+//				return;
+//			}
+//		}
+		if (checkFalling ()){// && tiles[currI,currJ].GetComponent<tileStuff>().getElevCat() != null) {
+			fallDown ();
+			return;
 		}
 		int tileOver = currI;
 		if (facingRight) {
@@ -190,7 +195,7 @@ public class ratsControl : allCatsControl {
 	public void fallDown(){
 		Debug.Log ("falling!");
 		tileStuff tileScript;
-		moveSpeed = origMoveSpeed * 4f;
+		moveSpeed = origMoveSpeed;// * 4f;
 		falling = true;
 		elevCatObj = null;
 		int nextJ = currJ;
@@ -199,9 +204,12 @@ public class ratsControl : allCatsControl {
 		while (!notPlat) {
 			nextJ--;
 			tileScript = tiles [currI, nextJ].GetComponent<tileStuff> ();
-			if (tileScript.getIsPlatform () || tileScript.getElevCat () != null) {
+			if (tileScript.getIsPlatform ()) {
 				notPlat = true;
 				foundJ = nextJ + 1;
+			} else if (tileScript.getElevCat () != null) {
+				notPlat = true;
+				foundJ = nextJ;
 			} else {
 				if (nextJ == currJ) {
 					foundJ = nextJ;

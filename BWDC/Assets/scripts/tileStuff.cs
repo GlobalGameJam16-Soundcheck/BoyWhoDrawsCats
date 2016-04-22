@@ -314,4 +314,10 @@ public class tileStuff : MonoBehaviour {
 		}
 	}
 
+	public void checkIfBoyFallingCusBelowDoorInactive(){
+		if (boy != null && elevCatObj == null && !isPlatform) {
+			boy.GetComponent<movment> ().setFloating (true);
+		}
+	}
+
 }

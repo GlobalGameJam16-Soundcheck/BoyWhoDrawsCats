@@ -70,6 +70,11 @@ public class doorController : MonoBehaviour {
 			inactive = true;
 			mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 0.2f);
 			tileScript.setDoor (false);
+			int aboveTileJ = tileJ + 1;
+			if (gridCont.onGrid (tileI, aboveTileJ)) {
+				tileStuff aboveTile = tiles [tileI, aboveTileJ].GetComponent<tileStuff> ();
+				aboveTile.checkIfBoyFallingCusBelowDoorInactive ();
+			}
 		}
 	}
 

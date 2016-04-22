@@ -57,7 +57,7 @@ public class yarnCatControl : allCatsControl {
 					//						playWithYarn ();
 				}
 			}
-			transform.position = Vector2.MoveTowards (transform.position, tileSpot, moveSpeed);
+			moveCat (moveSpeed);
 			changeSprite ();
 			base.updateTilePos ();
 		}
