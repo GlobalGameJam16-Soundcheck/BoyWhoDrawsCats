@@ -27,7 +27,9 @@ public class ratsControl : allCatsControl {
 //		speedDenom = Random.Range (1f, 10f);
 		speedDenom = 4f;
 		started = true;
-		movingTimer /= 2f;
+		movingTimer *= 1f / 10f;
+		moveSpeed *= 2f;
+		origMoveSpeed = moveSpeed;
 		origMovingTimer = movingTimer;
 		onElevCat = false;
 		elevCatObj = null;
