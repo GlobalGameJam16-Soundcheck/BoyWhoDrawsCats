@@ -18,6 +18,7 @@ public class gestureController : MonoBehaviour
 	public List<string> gestureNames = new List<string>();
 	private List<GameObject> tipList = new List<GameObject> ();
 	private float zPos = -5f;
+	private float trailTime;
 	//public GameObject testDot;
 
 
@@ -36,6 +37,7 @@ public class gestureController : MonoBehaviour
 		}
 		penTipTrailRender.GetComponent<TrailRenderer> ().sortingLayerName = "trailLayer";
 		penTipTrailRender.GetComponent<TrailRenderer> ().sortingOrder = 2;
+		trailTime = penTipTrailRender.GetComponent<TrailRenderer> ().time;
 //		myLine = penTipLineRender.GetComponent<LineRenderer>();
 //		myLine.sortingLayerName = "trailLayer";
 //		myLine.sortingOrder = 2;
@@ -45,10 +47,10 @@ public class gestureController : MonoBehaviour
 	void Update()
 	{
 		checkSpawningAndDeleting ();
-		if (playerController.mouseHoldTimer > 0){// && !useRender) {
-//			myLine.enabled = false;
-			return;
-		}
+//		if (playerController.mouseHoldTimer > 0){// && !useRender) {
+////			myLine.enabled = false;
+//			return;
+//		}
 		if (Input.GetMouseButton(0))
 		{
 			transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -69,8 +71,10 @@ public class gestureController : MonoBehaviour
 				}
 			} else {
 //				myLine.enabled = true;
-				penTipTrailRender.SetActive (true);
+//				Invoke("resetTrail", 0.01f);
+//				penTipTrailRender.SetActive (true);
 				penTipTrailRender.transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
+				penTipTrailRender.GetComponent<TrailRenderer> ().time = trailTime;
 			}
 			points.Add(new Vector2(transform.position.x, transform.position.y));
 			if (useRender) {
@@ -88,9 +92,12 @@ public class gestureController : MonoBehaviour
 		if (Input.GetMouseButtonUp(0))
 		{
 			if (useRender) {
-				penTipTrailRender.transform.position = new Vector3 (penTipTrailRender.transform.position.x, 
-					penTipTrailRender.transform.position.y, zPos * 5);
-				penTipTrailRender.SetActive (false);
+				Invoke ("resetTrail", 0.01f);
+//				penTipTrailRender.transform.position = new Vector3 (penTipTrailRender.transform.position.x, 
+//					penTipTrailRender.transform.position.y, zPos * 5);
+//				penTipTrailRender.GetComponent<TrailRenderer> ().time = -1f;
+//				penTipTrailRender.SetActive (false);
+
 //				myLine.SetPositions(new Vector3[0]);
 //				myLine.SetVertexCount (0);
 //				myLine.enabled = false;
@@ -156,6 +163,17 @@ public class gestureController : MonoBehaviour
 			tempPoints.Clear();
 			strokes.Clear();
 		}
+	}
+
+	private void resetTrail(){
+//		penTipTrailRender.SetActive (true);
+//		penTipTrailRender.transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
+//		penTipTrailRender.GetComponent<TrailRenderer> ().time = trailTime;
+
+		penTipTrailRender.transform.position = new Vector3 (penTipTrailRender.transform.position.x, 
+			penTipTrailRender.transform.position.y, zPos * 5);
+		penTipTrailRender.GetComponent<TrailRenderer> ().time = -1f;
+//		penTipTrailRender.SetActive (false);
 	}
 
 	private void checkSpawningAndDeleting(){
