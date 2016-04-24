@@ -287,7 +287,8 @@ public class movment : MonoBehaviour {
 			if (tileScript.getElevCat () == null) {
 				if (!foundElevCatAbove ()) {
 					if (sceneIndex == gridCont.elevCatScene) {
-						tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+//						tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+						tutorialSigns.GetComponent<tutorialSignControl> ().setTutAccomplished (true);
 					}
 					tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
 					inkLeft = nextInkLeft;
@@ -312,7 +313,8 @@ public class movment : MonoBehaviour {
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			tileScript.placeCat (attackCat, attackCatPrefab, gridCont.tileSize);
 			if (sceneIndex == gridCont.attackCatScene) {
-				tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+//				tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+				tutorialSigns.GetComponent<tutorialSignControl> ().setTutAccomplished (true);
 			}
 			inkLeft = nextInkLeft;
 		} else {
@@ -335,7 +337,8 @@ public class movment : MonoBehaviour {
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			tileScript.placeCat (yarnCat, yarnCatPrefab, gridCont.tileSize);
 			if (sceneIndex == gridCont.yarnCatScene) {
-				tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+//				tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+				tutorialSigns.GetComponent<tutorialSignControl> ().setTutAccomplished (true);
 			}
 			inkLeft = nextInkLeft;
 		} else {
@@ -352,8 +355,9 @@ public class movment : MonoBehaviour {
 		int i = gridCont.convertToTileCoord (camPos.x);
 		int j = gridCont.convertToTileCoord (transform.position.y);
 		int checkVertj = gridCont.convertToTileCoord(camPos.y);
-		if (sceneIndex == gridCont.tapScene && (i != boyTileI || j != checkVertj) && tutorialSigns != null){
-			tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+		if (sceneIndex == gridCont.tapScene && i != boyTileI && tutorialSigns != null){
+//			tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
+			tutorialSigns.GetComponent<tutorialSignControl> ().setTutAccomplished (true);
 		}
 		tileScript = tiles [i, checkVertj].GetComponent<tileStuff> ();
 		bool moveElevCat = false;
@@ -377,6 +381,9 @@ public class movment : MonoBehaviour {
 					elevCatMaxJ = ecc.maxJ;
 					elevCatMinJ = ecc.minJ;
 					usingElevator = true;
+					if (sceneIndex == gridCont.elevCatScene) {
+						tutorialSigns.GetComponent<tutorialSignControl> ().destroyOtherTap ();
+					}
 				} else {
 					Debug.Log("cat still moving hold up");
 					usingElevator = false;

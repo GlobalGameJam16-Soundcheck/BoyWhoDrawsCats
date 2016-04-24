@@ -47,10 +47,11 @@ public class gestureController : MonoBehaviour
 	void Update()
 	{
 		checkSpawningAndDeleting ();
-//		if (playerController.mouseHoldTimer > 0){// && !useRender) {
-////			myLine.enabled = false;
+		if (playerController.mouseHoldTimer > 0){// && !useRender) {
+//			myLine.enabled = false;
 //			return;
-//		}
+			Invoke("resetTrail", 0.01f);
+		}
 		if (Input.GetMouseButton(0))
 		{
 			transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -73,8 +74,11 @@ public class gestureController : MonoBehaviour
 //				myLine.enabled = true;
 //				Invoke("resetTrail", 0.01f);
 //				penTipTrailRender.SetActive (true);
-				penTipTrailRender.transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
-				penTipTrailRender.GetComponent<TrailRenderer> ().time = trailTime;
+				if (playerController.mouseHoldTimer <= 0f) {
+					penTipTrailRender.transform.position = new Vector3 (transform.position.x, transform.position.y, zPos);
+					penTipTrailRender.GetComponent<TrailRenderer> ().time = trailTime;
+//					penTipTrailRender.GetComponent<TrailRenderer> ().startWidth = 1f;
+				}
 			}
 			points.Add(new Vector2(transform.position.x, transform.position.y));
 			if (useRender) {
@@ -173,6 +177,7 @@ public class gestureController : MonoBehaviour
 		penTipTrailRender.transform.position = new Vector3 (penTipTrailRender.transform.position.x, 
 			penTipTrailRender.transform.position.y, zPos * 5);
 		penTipTrailRender.GetComponent<TrailRenderer> ().time = -1f;
+//		penTipTrailRender.GetComponent<TrailRenderer> ().startWidth = 0f;
 //		penTipTrailRender.SetActive (false);
 	}
 
