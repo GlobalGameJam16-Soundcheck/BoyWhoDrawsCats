@@ -46,6 +46,10 @@ public class tutorialSignControl : MonoBehaviour {
 
 	public void setTutAccomplished(bool a){
 		tutAccomplished = a;
+		if (!destroyed) {
+			SpriteRenderer sr = tutSign.GetComponent<SpriteRenderer> ();
+			sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 1f);
+		}
 		if (tutStroke != null) {
 			Destroy (tutStroke);
 		}
