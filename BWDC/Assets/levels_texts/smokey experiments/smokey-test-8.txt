@@ -1,0 +1,10 @@
+ b , b , b , b , b , b , b , b , b , b , b , b , b , b , b , b , b ,b
+ b ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   , b ,b
+ b ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   , b ,b
+ b , s ,   ,   ,   ,   ,d-0, b , b , b , b ,d-1,d-1, b ,d-0,d-0, b ,b
+ b , b , b , b , b ,   ,d-0, b ,   ,   ,   ,d-0,   ,d-1,d-0,d-0, b ,b
+ b , b , b , b ,   ,   ,d-0, b ,   ,   , r ,d-0,   ,d-1,   ,y-1, b ,b
+ b , b , b ,   ,   ,   , b , b ,d-1,d-1,d-1, b , b , b , b , b , b ,b
+ b , b ,   ,   ,   ,   , b , b ,d-1,d-1,   ,   ,   ,   ,   ,   ,   ,b
+ b , b ,   ,y-0,   ,   , b , b ,d-1,d-1,   ,   ,   ,   ,   , e ,   ,b
+ b , b , b , b , b , b , b , b , b , b , b , b , b , b , b , b , b ,b
