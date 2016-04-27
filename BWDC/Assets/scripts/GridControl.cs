@@ -31,6 +31,9 @@ public class GridControl : MonoBehaviour {
 	public int elevCatScene = 1;
 	public int yarnCatScene = 2;
 	public int attackCatScene = 3;
+//	attackCatScene = SceneManager.L
+
+	public GameObject[] npcChars;
 
     // Use this for initialization
     void Start () {
@@ -55,10 +58,17 @@ public class GridControl : MonoBehaviour {
 				if (t == "b") { //platform
 					isPlatform = true;
 					tiles [x, y] = (GameObject)(Instantiate (tile, new Vector3 (x, y, 0), Quaternion.identity));
-				} else if (string.IsNullOrEmpty(t) || consistsOfWhiteSpace(t) || t == "r") { //blank
+				} else if (string.IsNullOrEmpty (t) || consistsOfWhiteSpace (t) || t == "r") { //blank
 					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
 					if (t == "r") { //rat
 						tiles [x, y].GetComponent<tileStuff> ().placeRat (rat, tileSize);
+					}
+				} else if (!string.IsNullOrEmpty (t) && t.Length > 1 && t.Contains ("c")) {//npc character
+					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
+					string[] tArr = t.Split (new char[]{ '-' });
+					int whichCar = int.Parse (tArr [1]);
+					if (whichCar >= 0 && whichCar < npcChars.Length) {
+						Instantiate (npcChars [whichCar], new Vector3 (x, y, 0), Quaternion.identity);
 					}
 				} else if (t == "s") { //start
 					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
