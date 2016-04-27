@@ -276,6 +276,9 @@ public class movment : MonoBehaviour {
 	}
 
 	public void spawnElevCat(){
+		if (sceneIndex < gridCont.elevCatScene) {
+			return;
+		}
 		bool cannotSpawn = true;
 		int nextInkLeft = inkLeft - elevInkCost;
 		if (nextInkLeft < 0) {
@@ -302,6 +305,9 @@ public class movment : MonoBehaviour {
 	}
 
 	public void spawnAttackCat(int ac){
+		if (sceneIndex < gridCont.attackCatScene) {
+			return;
+		}
 		int nextInkLeft = inkLeft - attackInkCost;
 		if (nextInkLeft < 0) {
 			Debug.Log ("no more ink");
@@ -326,6 +332,9 @@ public class movment : MonoBehaviour {
 	}
 
 	public void spawnYarnCat(int yc){
+		if (sceneIndex < gridCont.yarnCatScene) {
+			return;
+		}
 		int nextInkLeft = inkLeft - attackInkCost;
 		if (nextInkLeft < 0) {
 			Debug.Log ("no more ink");
