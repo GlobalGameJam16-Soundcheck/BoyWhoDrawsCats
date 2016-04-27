@@ -20,7 +20,7 @@ public class allCatsControl : MonoBehaviour {
 	}
 
 	protected virtual void initialize(){
-		gridCont = Camera.main.GetComponent<GridControl>();
+		gridCont = Camera.main.GetComponent<gridGrabber>().returnGrid();
 		tiles = gridCont.tiles;
 		currI = gridCont.convertToTileCoord (transform.position.x);
 		currJ = gridCont.convertToTileCoord (transform.position.y);

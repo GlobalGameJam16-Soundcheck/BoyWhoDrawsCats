@@ -70,7 +70,7 @@ public class movment : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		gridCont = Camera.main.GetComponent<GridControl>();
+		gridCont = Camera.main.GetComponent<gridGrabber>().returnGrid();
 //		elevCatLayer = 1 << (LayerMask.NameToLayer ("elevCat"));
 		tiles = gridCont.tiles;
 		tileWidth = tiles.GetLength (0);

@@ -24,7 +24,7 @@ public class doorController : MonoBehaviour {
 
 	private void delayedStart(){
 		started = true;
-		gridCont = Camera.main.GetComponent<GridControl>();
+		gridCont = Camera.main.GetComponent<gridGrabber>().returnGrid();
 		tiles = gridCont.tiles;
 		mySprite = GetComponent<SpriteRenderer> ();
 		mySprite.color = startColor;

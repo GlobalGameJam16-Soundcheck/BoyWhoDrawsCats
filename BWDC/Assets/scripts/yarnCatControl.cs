@@ -30,6 +30,7 @@ public class yarnCatControl : allCatsControl {
 
 	// Update is called once per frame
 	void Update () {
+		bool slowedDown = false;
 		if (timeIsNormal ()) {
 			if (!onYarn) {
 				if (!floating && !falling) {
@@ -40,6 +41,7 @@ public class yarnCatControl : allCatsControl {
 						if (elevCat == null || belowTile.getIsPlatform ()) {
 							moveSpeed = origMoveSpeed;
 						} else {
+							slowedDown = true;
 							moveSpeed = origMoveSpeed / 2f;
 						}
 						moveForwards ();
@@ -57,7 +59,14 @@ public class yarnCatControl : allCatsControl {
 					//						playWithYarn ();
 				}
 			}
-			moveCat (moveSpeed);
+			float speed = moveSpeed;
+			if (falling || floating) {
+				speed *= 1.5f;
+				if (slowedDown) {
+					speed *= 1.5f;
+				}
+			}
+			moveCat (speed);
 			changeSprite ();
 			base.updateTilePos ();
 		}

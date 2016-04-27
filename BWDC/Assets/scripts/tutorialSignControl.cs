@@ -29,7 +29,7 @@ public class tutorialSignControl : MonoBehaviour {
 				sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 0f);
 			}
 		}
-		gridCont = Camera.main.GetComponent<GridControl>();
+		gridCont = Camera.main.GetComponent<gridGrabber>().returnGrid();
 		tutAccomplished = false;
 		velo = 5f;
 		destroyed = false;
