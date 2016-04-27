@@ -22,6 +22,7 @@ public class attackCatControl : allCatsControl {
 		origMovingTimer = movingTimer;
 		currI = gridCont.convertToTileCoord (transform.position.x);
 		currJ = gridCont.convertToTileCoord (transform.position.y);
+
 	}
 	
 	// Update is called once per frame
@@ -120,11 +121,16 @@ public class attackCatControl : allCatsControl {
 					movingTimer = origMovingTimer;
 				}
 			} else {
-				movingTimer = origMovingTimer;
+//				movingTimer = origMovingTimer;
 				int tileDown = currJ - 1;
 				tileStuff downTile = tiles [tileOver, tileDown].GetComponent<tileStuff> ();
 				if (!downTile.getIsPlatform () && (tileScript.getElevCat() == null)) {
-					floating = true;
+//					floating = true;
+					movingTimer -= Time.deltaTime;
+					if (movingTimer < 0f) {
+						turnAround = true;
+						movingTimer = origMovingTimer;
+					}
 				}
 			}
 		} else {
