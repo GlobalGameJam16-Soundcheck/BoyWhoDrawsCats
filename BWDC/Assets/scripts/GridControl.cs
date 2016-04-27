@@ -38,7 +38,7 @@ public class GridControl : MonoBehaviour {
     // Use this for initialization
     void Start () {
 		tileSize = 1f;
-       // TextAsset levelCsv = (TextAsset)Resources.Load("level", typeof(TextAsset));
+//        TextAsset levelCsv = (TextAsset)Resources.Load("level", typeof(TextAsset));
 		doorDict = new Dictionary<int, List<GameObject>>();
         string[,] tempTiles = CSVReader.SplitCsvGrid(levelCsv.text);
         tileWidth = tempTiles.GetLength(0);
