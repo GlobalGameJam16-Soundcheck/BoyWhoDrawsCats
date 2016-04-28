@@ -286,16 +286,22 @@ public class movment : MonoBehaviour {
 			return;
 		}
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
+		tileStuff belowTile = null;
+		if (gridCont.onGrid (boyTileI, boyTileJ - 1)) {
+			belowTile = tiles [boyTileI, boyTileJ - 1].GetComponent<tileStuff> ();
+		}
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
 			if (tileScript.getElevCat () == null) {
 				if (!foundElevCatAbove ()) {
-					if (sceneIndex == gridCont.elevCatScene) {
+					if (belowTile == null || !belowTile.isADoor) {
+						if (sceneIndex == gridCont.elevCatScene) {
 //						tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
-						tutorialSigns.GetComponent<tutorialSignControl> ().setTutAccomplished (true);
+							tutorialSigns.GetComponent<tutorialSignControl> ().setTutAccomplished (true);
+						}
+						tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
+						inkLeft = nextInkLeft;
+						cannotSpawn = false;
 					}
-					tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
-					inkLeft = nextInkLeft;
-					cannotSpawn = false;
 				}
 			}
 		}

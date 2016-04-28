@@ -89,6 +89,14 @@ public class tileStuff : MonoBehaviour {
 		return isPlatform;
 	}
 
+	public void setIsADoor(bool isDoor){
+		isADoor = isDoor;
+	}
+
+	public bool getIsADoor(){
+		return isADoor;
+	}
+
 	public void placeCat(int type, GameObject cat, float tileSize){
 		float x = transform.position.x;
 		float y = transform.position.y;
@@ -305,7 +313,6 @@ public class tileStuff : MonoBehaviour {
 	}
 
 	public void setDoor(bool isDoor){
-		isADoor = isDoor;
 		isPlatform = isDoor;
 		if (isDoor) {
 			if (boy != null) {
