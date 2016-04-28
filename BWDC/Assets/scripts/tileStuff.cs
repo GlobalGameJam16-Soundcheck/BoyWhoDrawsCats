@@ -6,6 +6,7 @@ using System;
 public class tileStuff : MonoBehaviour {
 
 	public bool isPlatform = false;
+	public bool isADoor = false;
 	public bool canRemoveCat = false;
 
 	//[Header("end")]
@@ -304,6 +305,7 @@ public class tileStuff : MonoBehaviour {
 	}
 
 	public void setDoor(bool isDoor){
+		isADoor = isDoor;
 		isPlatform = isDoor;
 		if (isDoor) {
 			if (boy != null) {
