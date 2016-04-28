@@ -20,7 +20,7 @@ public class npcControl : MonoBehaviour {
 
 	private void delayedStart(){
 		textSR = textBubble.GetComponent<SpriteRenderer> ();
-		gridCont = Camera.main.GetComponent<GridControl>();
+		gridCont = Camera.main.GetComponent<gridGrabber>().returnGrid();
 		tiles = gridCont.tiles;
 		tileI = gridCont.convertToTileCoord (transform.position.x);
 		tileJ = gridCont.convertToTileCoord (transform.position.y);

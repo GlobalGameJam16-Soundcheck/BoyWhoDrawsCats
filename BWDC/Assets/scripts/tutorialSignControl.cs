@@ -18,25 +18,62 @@ public class tutorialSignControl : MonoBehaviour {
 
 	public GameObject tutStroke;
 
+	private int att;//index to signs
+	private int yarn;
+	private int elev;
+	private int tap;
+
 	// Use this for initialization
 	void Start () {
+		att = 3;
+		yarn = 2;
+		elev = 1;
+		tap = 0;
 		sceneIndex = SceneManager.GetActiveScene().buildIndex;
+		gridCont = Camera.main.GetComponent<gridGrabber>().returnGrid();
 		for (int i = 0; i < signs.Length; i++) {
 			SpriteRenderer sr = signs [i].GetComponent<SpriteRenderer> ();
-			if (i < sceneIndex || sceneIndex == -1) {
+			if (sceneIndex > gridCont.attackCatScene) {
 				sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 1f);
+			} else if (sceneIndex > gridCont.yarnCatScene) {
+				if (i < att) {
+					sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 1f);
+				} else {
+					sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 0f);
+				}
+			} else if (sceneIndex > gridCont.elevCatScene) {
+				if (i < yarn) {
+					sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 1f);
+				} else {
+					sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 0f);
+				}
+			} else if (sceneIndex > gridCont.tapScene) {
+				if (i < elev) {
+					sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 1f);
+				} else {
+					sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 0f);
+				}
 			} else {
 				sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 0f);
 			}
 		}
-		gridCont = Camera.main.GetComponent<gridGrabber>().returnGrid();
 		tutAccomplished = false;
 		velo = 5f;
 		destroyed = false;
 	}
 
 	public void setSign(){
-		SpriteRenderer sr = signs [sceneIndex].GetComponent<SpriteRenderer> ();
+		int i = tap;
+		if (sceneIndex == gridCont.tapScene) {
+			i = tap;
+		} else if (sceneIndex == gridCont.elevCatScene) {
+			i = elev;
+		} else if (sceneIndex == gridCont.yarnCatScene) {
+			i = yarn;
+		} else if (sceneIndex == gridCont.attackCatScene) {
+			i = att;
+		}
+		SpriteRenderer sr = signs [i].GetComponent<SpriteRenderer> ();
 		sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 1f);
 		if (sceneIndex == gridCont.elevCatScene && otherTap != null) {
 			sr = otherTap.GetComponent<SpriteRenderer> ();
