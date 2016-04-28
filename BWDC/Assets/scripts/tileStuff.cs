@@ -6,6 +6,7 @@ using System;
 public class tileStuff : MonoBehaviour {
 
 	public bool isPlatform = false;
+	public bool isADoor = false;
 	public bool canRemoveCat = false;
 
 	//[Header("end")]
@@ -86,6 +87,14 @@ public class tileStuff : MonoBehaviour {
 
 	public bool getIsPlatform(){
 		return isPlatform;
+	}
+
+	public void setIsADoor(bool isDoor){
+		isADoor = isDoor;
+	}
+
+	public bool getIsADoor(){
+		return isADoor;
 	}
 
 	public void placeCat(int type, GameObject cat, float tileSize){

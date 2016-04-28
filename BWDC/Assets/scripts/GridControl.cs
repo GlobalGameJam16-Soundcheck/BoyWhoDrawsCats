@@ -49,6 +49,7 @@ public class GridControl : MonoBehaviour {
 				bool isPlatform = false;
 				GameObject yarnObj = null;
 				GameObject endObj = null;
+				bool isADoor = false;
 				string t = tempTiles [x, tileHeight - 1 - y];
 				if (!string.IsNullOrEmpty (t)) {
 					t = t.ToLower ();
@@ -81,6 +82,7 @@ public class GridControl : MonoBehaviour {
 					//this is a door that the yarn contains
 					isPlatform = true;
 					tiles [x, y] = (GameObject)(Instantiate (blankTile, new Vector3 (x, y, 0), Quaternion.identity));
+					isADoor = true;
 					string[] tArr = t.Split (new char[]{ '-' });
 					int doorVal = int.Parse (tArr [1]);
 					GameObject newDoorObj = (GameObject)(Instantiate (door, new Vector3 (x, y, 0), Quaternion.identity));
@@ -105,6 +107,7 @@ public class GridControl : MonoBehaviour {
 //					Debug.Break ();
 				}
 				tiles [x, y].GetComponent<tileStuff> ().setIsPlatform (isPlatform);
+				tiles [x, y].GetComponent<tileStuff> ().setIsADoor (isADoor);
 				tiles [x, y].GetComponent<tileStuff> ().setYarnObj (yarnObj);
 				tiles [x, y].GetComponent<tileStuff> ().setEndTile (endObj);
             }
