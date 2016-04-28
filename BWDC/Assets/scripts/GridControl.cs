@@ -35,6 +35,12 @@ public class GridControl : MonoBehaviour {
 
 	public GameObject[] npcChars;
 
+	//for cat spawn outlines
+	public Vector3 outlineSpawnPoint;
+	public GameObject elevCatOutline;
+	public GameObject attackCatOutline;
+	public GameObject yarnCatOutline;
+
     // Use this for initialization
     void Start () {
 		tileSize = 1f;

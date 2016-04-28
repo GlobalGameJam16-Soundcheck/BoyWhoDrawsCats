@@ -298,6 +298,8 @@ public class movment : MonoBehaviour {
 //						tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
 							tutorialSigns.GetComponent<tutorialSignControl> ().setTutAccomplished (true);
 						}
+						GameObject outline = (GameObject)(Instantiate (gridCont.elevCatOutline, gridCont.outlineSpawnPoint, Quaternion.identity));
+						outline.GetComponent<outlineCatControl> ().setBoyTileIJ (boyTileI, boyTileJ);
 						tileScript.placeCat (elevCat, elevCatPrefab, gridCont.tileSize);
 						inkLeft = nextInkLeft;
 						cannotSpawn = false;
@@ -323,6 +325,8 @@ public class movment : MonoBehaviour {
 		bool cannotSpawn = false;
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
+			GameObject outline = (GameObject)(Instantiate (gridCont.attackCatOutline, gridCont.outlineSpawnPoint, Quaternion.identity));
+			outline.GetComponent<outlineCatControl> ().setBoyTileIJ (boyTileI, boyTileJ);
 			tileScript.placeCat (attackCat, attackCatPrefab, gridCont.tileSize);
 			if (sceneIndex == gridCont.attackCatScene) {
 //				tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
@@ -350,6 +354,8 @@ public class movment : MonoBehaviour {
 		bool cannotSpawn = false;
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
 		if (reachedDestination () && !tileScript.getIsPlatform ()) {
+			GameObject outline = (GameObject)(Instantiate (gridCont.yarnCatOutline, gridCont.outlineSpawnPoint, Quaternion.identity));
+			outline.GetComponent<outlineCatControl> ().setBoyTileIJ (boyTileI, boyTileJ);
 			tileScript.placeCat (yarnCat, yarnCatPrefab, gridCont.tileSize);
 			if (sceneIndex == gridCont.yarnCatScene) {
 //				tutorialSigns.GetComponent<tutorialSignControl> ().setSign ();
