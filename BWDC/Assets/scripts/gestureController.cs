@@ -201,9 +201,10 @@ public class gestureController : MonoBehaviour
 						gesture.Equals(gestureNames[7]) || gesture.Equals(gestureNames[8])) {
 				playerController.spawnYarnCat (playerController.yarnCatRight);
             //delete cat
-			} else if (gesture.Equals(gestureNames[4])){
-				playerController.deleteCats ();
-			}
+			} 
+//			else if (gesture.Equals(gestureNames[4])){
+//				playerController.deleteCats ();
+//			}
 		}
 	}
 

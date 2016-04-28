@@ -12,7 +12,7 @@ public class movment : MonoBehaviour {
 	public GameObject drawingOn;
 	public float mouseHoldTimer { get; set; }
 	private float origMouseHoldTimer;
-	public int inkLeft = 200;
+	public int inkLeft = 200000;
 	public int health;
 	private bool flashing;
 	private float flashTimer;
@@ -235,27 +235,27 @@ public class movment : MonoBehaviour {
 		return ret;
 	}
 
-	public void deleteCats(){
-		int clickedI = gridCont.convertToTileCoord (camPos.x);
-		int clickedJ = gridCont.convertToTileCoord (camPos.y);
-		if (gridCont.onGrid(clickedI, clickedJ)){
-			tileStuff tileScript = tiles [clickedI, clickedJ].GetComponent<tileStuff>();
-			deleteLight.transform.position = new Vector2 (clickedI, clickedJ);
-			inkLeft += tileScript.deleteAllCats (elevInkCost, attackInkCost, yarnCatCost);
-			Debug.Log ("inkLeft: " + inkLeft);
-			if (clickedI == boyTileI && clickedJ == boyTileJ) {
-				int lowerJ = boyTileJ - 1;
-				if (gridCont.onGrid (clickedI, lowerJ)) {
-					tileStuff belowTile = tiles [clickedI, lowerJ].GetComponent<tileStuff> ();
-					if (tileScript.getElevCat () == null && !belowTile.getIsPlatform()) {
-						floating = true;
-						dest = new Vector3 (clickedI, lowerJ, 0f);
-						Debug.Log ("new dest gotta float no more elev cat");
-					}
-				}
-			}
-		}
-	}
+//	public void deleteCats(){
+//		int clickedI = gridCont.convertToTileCoord (camPos.x);
+//		int clickedJ = gridCont.convertToTileCoord (camPos.y);
+//		if (gridCont.onGrid(clickedI, clickedJ)){
+//			tileStuff tileScript = tiles [clickedI, clickedJ].GetComponent<tileStuff>();
+//			deleteLight.transform.position = new Vector2 (clickedI, clickedJ);
+//			inkLeft += tileScript.deleteAllCats (elevInkCost, attackInkCost, yarnCatCost);
+//			Debug.Log ("inkLeft: " + inkLeft);
+//			if (clickedI == boyTileI && clickedJ == boyTileJ) {
+//				int lowerJ = boyTileJ - 1;
+//				if (gridCont.onGrid (clickedI, lowerJ)) {
+//					tileStuff belowTile = tiles [clickedI, lowerJ].GetComponent<tileStuff> ();
+//					if (tileScript.getElevCat () == null && !belowTile.getIsPlatform()) {
+//						floating = true;
+//						dest = new Vector3 (clickedI, lowerJ, 0f);
+//						Debug.Log ("new dest gotta float no more elev cat");
+//					}
+//				}
+//			}
+//		}
+//	}
 
 	private bool foundElevCatAbove(){
 		int j = boyTileJ;
