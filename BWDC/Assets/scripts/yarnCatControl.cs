@@ -11,6 +11,7 @@ public class yarnCatControl : allCatsControl {
 	private bool reachedYarnFirstTime;
 	private float origMoveSpeed;
     private Animator anim;
+	private float animSpeed;
 
 	// Use this for initialization
 	void Start () {
@@ -28,12 +29,14 @@ public class yarnCatControl : allCatsControl {
         //		currI = gridCont.convertToTileCoord (transform.position.x);
         //		currJ = gridCont.convertToTileCoord (transform.position.y);
         anim = gameObject.GetComponent<Animator>();
+		animSpeed = anim.speed;
 	}
 
 	// Update is called once per frame
 	void Update () {
 		bool slowedDown = false;
 		if (timeIsNormal ()) {
+			anim.speed = animSpeed;
 			if (!onYarn) {
 				if (!floating && !falling) {
 					tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
@@ -71,6 +74,8 @@ public class yarnCatControl : allCatsControl {
 			moveCat (speed);
 			changeSprite ();
 			base.updateTilePos ();
+		} else {
+			anim.speed = 0f;
 		}
 	}
 
@@ -98,6 +103,10 @@ public class yarnCatControl : allCatsControl {
 
 	public void setOnYarn(bool oy){
 		onYarn = oy;
+		if (anim == null) {
+			anim = GetComponent<Animator> ();
+			animSpeed = anim.speed;
+		}
         if (oy)
         {
             anim.SetBool("onYarn", true);

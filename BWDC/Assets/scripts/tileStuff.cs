@@ -41,6 +41,8 @@ public class tileStuff : MonoBehaviour {
 	private AudioSource mySource;
 	public AudioClip ratKillsCat;
 	public AudioClip catKillsRat;
+	public AudioClip ratDiesFromDoor;
+	public AudioClip catDiesFromDoor;
 
 	void Start(){
 		mySource = GetComponent<AudioSource> ();
@@ -249,6 +251,10 @@ public class tileStuff : MonoBehaviour {
 		}
 		ret += (attackInkCost * numAttackDeleted);
 		ret += (yarnCatCost * numYarnDeleted);
+		if (ret > 0) {
+			mySource.clip = catDiesFromDoor;
+			mySource.Play ();
+		}
 		return ret;
 	}
 
@@ -309,11 +315,17 @@ public class tileStuff : MonoBehaviour {
 	}
 
 	public void deleteAllRats(){
+		bool dies = false;
 		if (ratObjs != null && ratObjs.Count > 0) {
 			foreach (GameObject ratObj in ratObjs) {
 				Destroy (ratObj);
+				dies = true;
 			}
 			ratObjs = new List<GameObject> ();
+		}
+		if (dies) {
+			mySource.clip = ratDiesFromDoor;
+			mySource.Play ();
 		}
 	}
 
