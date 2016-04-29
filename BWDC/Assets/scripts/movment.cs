@@ -173,7 +173,11 @@ public class movment : MonoBehaviour {
 			Vector3 dir = dest - transform.position;
 			dir = dir.normalized * velo;
 			transform.position = transform.position + dir * Time.deltaTime;
-			anim.SetBool ("walk", true);
+			if (!usingElevator) {
+				anim.SetBool ("walk", true);
+			} else {
+				anim.SetBool ("walk", false);
+			}
 		} else {
 			anim.SetBool ("walk", false);
 		}
