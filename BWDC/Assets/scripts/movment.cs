@@ -83,15 +83,13 @@ public class movment : MonoBehaviour {
 		oldTileI = boyTileI;
 		oldTileJ = boyTileJ;
 		dest = new Vector3 (xPos, yPos, 0f);
-//		mySprite = GetComponent<SpriteRenderer> ();
-//		rightSprite = mySprite.sprite;
 		mouseHoldTimer = 0.15f;
 		origMouseHoldTimer = mouseHoldTimer;
-		mySprite = GetComponent<SpriteRenderer> ();
+		mySprite = transform.GetChild (0).GetComponent<SpriteRenderer> ();
 		flashTimer = 0.1f;
 		origFlashTimer = flashTimer;
 		sceneIndex = SceneManager.GetActiveScene ().buildIndex;
-        anim = gameObject.GetComponent<Animator>();
+		anim = transform.GetChild (0).GetComponent<Animator>();
     }
 
 	public void initialize(Vector3 pos){
