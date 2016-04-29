@@ -17,7 +17,7 @@ public class attackCatControl : allCatsControl {
 		falling = false;
 //		movingTimer -= 0.1f;
 		movingTimer /= 2.5f;
-		moveSpeed = moveSpeed / 1.8f;
+		moveSpeed = moveSpeed / 2.3f;
 		origMoveSpeed = moveSpeed;
 		origMovingTimer = movingTimer;
 		currI = gridCont.convertToTileCoord (transform.position.x);
