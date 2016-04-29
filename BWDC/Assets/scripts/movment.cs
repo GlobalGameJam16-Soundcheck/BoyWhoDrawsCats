@@ -20,6 +20,7 @@ public class movment : MonoBehaviour {
 	private int flashCount = 0;
 	private SpriteRenderer mySprite;
 	public bool gamePaused { get; set; }
+    private Animator anim;
 
     Vector3 dest;
     private float walkSpeed = 0.07f;
@@ -90,6 +91,7 @@ public class movment : MonoBehaviour {
 		flashTimer = 0.1f;
 		origFlashTimer = flashTimer;
 		sceneIndex = SceneManager.GetActiveScene ().buildIndex;
+        anim = gameObject.GetComponent<Animator>();
     }
 
 	public void initialize(Vector3 pos){
@@ -105,6 +107,7 @@ public class movment : MonoBehaviour {
 			changeSprite ();
 			if (!gridCont.gamePaused) {
 				moveBoy ();
+                changeAnim();
 				boyTileI = gridCont.convertToTileCoord (transform.position.x);
 				boyTileJ = gridCont.convertToTileCoord (transform.position.y);
 				if (oldTileI != boyTileI || oldTileJ != boyTileJ) {
@@ -156,6 +159,11 @@ public class movment : MonoBehaviour {
 		} else {
 			
 		}
+    }
+
+    private void changeAnim()
+    {
+        anim.SetBool("flip", facingRight);
     }
 
 	private void moveBoy(){
