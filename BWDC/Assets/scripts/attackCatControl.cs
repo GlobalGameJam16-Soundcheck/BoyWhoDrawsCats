@@ -8,6 +8,8 @@ public class attackCatControl : allCatsControl {
 	private bool floating;
 	private bool falling;
 	private float origMoveSpeed;
+	private float animSpeed;
+	private Animator anim;
 
 	// Use this for initialization
 	void Start () {
@@ -22,12 +24,14 @@ public class attackCatControl : allCatsControl {
 		origMovingTimer = movingTimer;
 		currI = gridCont.convertToTileCoord (transform.position.x);
 		currJ = gridCont.convertToTileCoord (transform.position.y);
-
+		anim = GetComponent<Animator> ();
+		animSpeed = anim.speed;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (timeIsNormal ()) {
+			anim.speed = animSpeed;
 			if (!floating && !falling) {
 				tileStuff tileScript = tiles [currI, currJ].GetComponent<tileStuff> ();
 				tileStuff belowTile = tiles [currI, currJ - 1].GetComponent<tileStuff> ();
@@ -49,6 +53,8 @@ public class attackCatControl : allCatsControl {
 			moveCat (moveSpeed);
 			changeSprite ();
 			base.updateTilePos ();
+		} else {
+			anim.speed = 0f;
 		}
 	}
 
