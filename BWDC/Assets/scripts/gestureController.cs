@@ -19,7 +19,10 @@ public class gestureController : MonoBehaviour
 	private List<GameObject> tipList = new List<GameObject> ();
 	private float zPos = -5f;
 	private float trailTime;
+	public AudioClip errorNoise;
+	private AudioSource mySource;
 	//public GameObject testDot;
+	private bool liftedPen = false;
 
 
 	public GameObject player;
@@ -41,12 +44,14 @@ public class gestureController : MonoBehaviour
 //		myLine = penTipLineRender.GetComponent<LineRenderer>();
 //		myLine.sortingLayerName = "trailLayer";
 //		myLine.sortingOrder = 2;
+		mySource = GetComponent<AudioSource>();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
 		checkSpawningAndDeleting ();
+		liftedPen = false;
 		if (playerController.mouseHoldTimer > 0){// && !useRender) {
 //			myLine.enabled = false;
 //			return;
@@ -95,6 +100,9 @@ public class gestureController : MonoBehaviour
 		}
 		if (Input.GetMouseButtonUp(0))
 		{
+			if (playerController.mouseHoldTimer <= 0) {
+				liftedPen = true;
+			}
 			if (useRender) {
 				Invoke ("resetTrail", 0.01f);
 //				penTipTrailRender.transform.position = new Vector3 (penTipTrailRender.transform.position.x, 
@@ -184,27 +192,55 @@ public class gestureController : MonoBehaviour
 	private void checkSpawningAndDeleting(){
 		string gesture = spawn ();
 		if (gestureNames.Count > 0) {
-            //elevator cat
-			if (gesture.Equals (gestureNames [0]) || gesture.Equals (gestureNames [1]) || 
-				gesture.Equals(gestureNames[13]) || gesture.Equals(gestureNames[14])) {
-				playerController.spawnElevCat ();
-            //attack cat
+			//elevator cat
+			if (gesture.Equals (gestureNames [0]) || gesture.Equals (gestureNames [1]) ||
+			    gesture.Equals (gestureNames [13]) || gesture.Equals (gestureNames [14])) {
+				if (playerController.spawnElevCat ()) {
+					//cannot spawn
+					mySource.clip = errorNoise;
+					mySource.Play ();
+				}
+				//attack cat
 			} else if (gesture.Equals (gestureNames [2])) {
-				playerController.spawnAttackCat (playerController.attackCatRight);
+				if (playerController.spawnAttackCat (playerController.attackCatRight)) {
+					//cannot spawn
+					mySource.clip = errorNoise;
+					mySource.Play ();
+				}
 			} else if (gesture.Equals (gestureNames [3])) {
-				playerController.spawnAttackCat (playerController.attackCatLeft);
-            //yarn cat
-			} else if (gesture.Equals (gestureNames [9]) || gesture.Equals(gestureNames[10]) || 
-						gesture.Equals(gestureNames[11]) || gesture.Equals(gestureNames[12])) {
-				playerController.spawnYarnCat (playerController.yarnCatLeft);
-			} else if (gesture.Equals (gestureNames [5]) || gesture.Equals(gestureNames[6]) || 
-						gesture.Equals(gestureNames[7]) || gesture.Equals(gestureNames[8])) {
-				playerController.spawnYarnCat (playerController.yarnCatRight);
-            //delete cat
-			} 
-//			else if (gesture.Equals(gestureNames[4])){
+				if (playerController.spawnAttackCat (playerController.attackCatLeft)) {
+					//cannot spawn
+					mySource.clip = errorNoise;
+					mySource.Play ();
+				}
+				//yarn cat
+			} else if (gesture.Equals (gestureNames [9]) || gesture.Equals (gestureNames [10]) ||
+			           gesture.Equals (gestureNames [11]) || gesture.Equals (gestureNames [12])) {
+				if (playerController.spawnYarnCat (playerController.yarnCatLeft)) {
+					//cannot spawn
+					mySource.clip = errorNoise;
+					mySource.Play ();
+				}
+			} else if (gesture.Equals (gestureNames [5]) || gesture.Equals (gestureNames [6]) ||
+			           gesture.Equals (gestureNames [7]) || gesture.Equals (gestureNames [8])) {
+				if (playerController.spawnYarnCat (playerController.yarnCatRight)) {
+					//cannot spawn
+					mySource.clip = errorNoise;
+					mySource.Play ();
+				}
+				//delete cat
+			} else if (gesture.Equals (gestureNames [4])) { //delete
 //				playerController.deleteCats ();
-//			}
+				//cannot spawn
+				mySource.clip = errorNoise;
+				mySource.Play ();
+			} else if (!mySource.isPlaying && gesture.Equals ("none") && liftedPen) {
+				mySource.clip = errorNoise;
+				mySource.Play ();
+			}
+		} else {
+			mySource.clip = errorNoise;
+			mySource.Play ();
 		}
 	}
 

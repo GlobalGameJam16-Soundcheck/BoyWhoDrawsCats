@@ -290,15 +290,15 @@ public class movment : MonoBehaviour {
 		return false;
 	}
 
-	public void spawnElevCat(){
-		if (sceneIndex < gridCont.elevCatScene) {
-			return;
-		}
+	public bool spawnElevCat(){
 		bool cannotSpawn = true;
+		if (sceneIndex < gridCont.elevCatScene) {
+			return cannotSpawn;
+		}
 		int nextInkLeft = inkLeft - elevInkCost;
 		if (nextInkLeft < 0) {
 			Debug.Log ("no more ink");
-			return;
+			return true;
 		}
 		tileStuff tileScript = tiles [boyTileI, boyTileJ].GetComponent<tileStuff> ();
 		tileStuff belowTile = null;
@@ -325,16 +325,17 @@ public class movment : MonoBehaviour {
 		if (cannotSpawn) {
 			Debug.Log ("cannot spawn, show animation or sound as to why cannot spawn");
 		}
+		return cannotSpawn;
 	}
 
-	public void spawnAttackCat(int ac){
+	public bool spawnAttackCat(int ac){
 		if (sceneIndex < gridCont.attackCatScene) {
-			return;
+			return true;
 		}
 		int nextInkLeft = inkLeft - attackInkCost;
 		if (nextInkLeft < 0) {
 			Debug.Log ("no more ink");
-			return;
+			return true;
 		}
 		attackCat = ac;
 		bool cannotSpawn = false;
@@ -354,16 +355,17 @@ public class movment : MonoBehaviour {
 		if (cannotSpawn) {
 			Debug.Log ("cannot spawn, show animation or sound as to why cannot spawn");
 		}
+		return cannotSpawn;
 	}
 
-	public void spawnYarnCat(int yc){
+	public bool spawnYarnCat(int yc){
 		if (sceneIndex < gridCont.yarnCatScene) {
-			return;
+			return true;
 		}
 		int nextInkLeft = inkLeft - attackInkCost;
 		if (nextInkLeft < 0) {
 			Debug.Log ("no more ink");
-			return;
+			return true;
 		}
 		yarnCat = yc;
 		bool cannotSpawn = false;
@@ -383,6 +385,7 @@ public class movment : MonoBehaviour {
 		if (cannotSpawn) {
 			Debug.Log ("cannot spawn, show animation or sound as to why cannot spawn");
 		}
+		return cannotSpawn;
 	}
 
 	private void checkNewPos(){
