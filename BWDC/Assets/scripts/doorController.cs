@@ -56,7 +56,10 @@ public class doorController : MonoBehaviour {
 	}
 
 	public void setActive(){
-		numOnYarn--;
+		if (numOnYarn > 0) {
+			numOnYarn--;
+		}
+		Debug.Log("numOnYarn: " + numOnYarn);
 		if (numOnYarn == 0) {
 			inactive = false;
 			mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 1f);
@@ -66,6 +69,7 @@ public class doorController : MonoBehaviour {
 
 	public void setInactive(){
 		numOnYarn++;
+		Debug.Log("numOnYarn: " + numOnYarn);
 		if (numOnYarn > 0) {
 			inactive = true;
 			mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 0.2f);
