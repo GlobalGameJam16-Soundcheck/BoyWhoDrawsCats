@@ -107,7 +107,7 @@ public class movment : MonoBehaviour {
 			changeSprite ();
 			if (!gridCont.gamePaused) {
 				moveBoy ();
-                changeAnim();
+				changeAnim ();
 				boyTileI = gridCont.convertToTileCoord (transform.position.x);
 				boyTileJ = gridCont.convertToTileCoord (transform.position.y);
 				if (oldTileI != boyTileI || oldTileJ != boyTileJ) {
@@ -120,10 +120,11 @@ public class movment : MonoBehaviour {
 				oldTileI = boyTileI;
 				oldTileJ = boyTileJ;
 				checkHitByRat ();
+			} else {
+				anim.speed = 0f;
 			}
 			if (Input.GetMouseButton (0)) {
 				mouseHoldTimer -= Time.deltaTime;
-				Debug.Log (mouseHoldTimer);
 				if (mouseHoldTimer <= 0) {
 					gridCont.gamePaused = true;
 					if (!drawingOn.activeInHierarchy) {
@@ -161,9 +162,10 @@ public class movment : MonoBehaviour {
 		}
     }
 
-    private void changeAnim()
-    {
-        anim.SetBool("flip", facingRight);
+    private void changeAnim() {
+//		Debug.Log (facingRight);
+		mySprite.flipX = !facingRight;
+		anim.speed = 1f;
     }
 
 	private void moveBoy(){
@@ -450,7 +452,6 @@ public class movment : MonoBehaviour {
 				facingRight = (i > boyTileI);
 			}
 			dest = potential;
-			Debug.Log ("dest: " + dest + " curr:" + transform.position);
 		}
 		highlight.transform.position = new Vector3 (gridCont.convertToTileCoord (camPos.x), gridCont.convertToTileCoord (camPos.y), 0f);
 	}
@@ -511,7 +512,6 @@ public class movment : MonoBehaviour {
 	private bool setFallingDest(){
 		int i = boyTileI;
 		int j = boyTileJ;
-		Debug.Log (boyTileI + " " + i + " " + j + " falling");
 		bool foundPlat = false;
 		tileStuff tileScript;
 		while (!foundPlat) {
@@ -521,11 +521,9 @@ public class movment : MonoBehaviour {
 			tileScript = tiles [i, j].GetComponent<tileStuff> ();
 			if (tileScript.getElevCat () != null) {
 				dest = new Vector3 (i, j, 0f);
-				Debug.Log ("found falling dest on cat: " + dest);
 				return true;
 			} else if (tileScript.getIsPlatform ()) {
 				dest = new Vector3 (i, j + 1, 0f);
-				Debug.Log ("found falling dest on plat: " + dest);
 				return true;
 			}
 			j--;
