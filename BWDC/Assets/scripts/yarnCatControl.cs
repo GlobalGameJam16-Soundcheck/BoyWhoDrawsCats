@@ -10,6 +10,7 @@ public class yarnCatControl : allCatsControl {
 	private bool onYarn;
 	private bool reachedYarnFirstTime;
 	private float origMoveSpeed;
+    private Animator anim;
 
 	// Use this for initialization
 	void Start () {
@@ -24,8 +25,9 @@ public class yarnCatControl : allCatsControl {
 		moveSpeed /= 2f;
 		origMoveSpeed = moveSpeed;
 		origMovingTimer = movingTimer;
-//		currI = gridCont.convertToTileCoord (transform.position.x);
-//		currJ = gridCont.convertToTileCoord (transform.position.y);
+        //		currI = gridCont.convertToTileCoord (transform.position.x);
+        //		currJ = gridCont.convertToTileCoord (transform.position.y);
+        anim = gameObject.GetComponent<Animator>();
 	}
 
 	// Update is called once per frame
@@ -96,6 +98,10 @@ public class yarnCatControl : allCatsControl {
 
 	public void setOnYarn(bool oy){
 		onYarn = oy;
+        if (oy)
+        {
+            anim.SetBool("onYarn", true);
+        }
 		if (gridCont == null) {
 			currI = (int)Mathf.Round (transform.position.x);
 			currJ = (int)Mathf.Round (transform.position.y);
