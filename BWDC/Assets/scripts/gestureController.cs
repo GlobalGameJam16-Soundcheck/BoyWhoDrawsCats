@@ -20,6 +20,7 @@ public class gestureController : MonoBehaviour
 	private float zPos = -5f;
 	private float trailTime;
 	public AudioClip errorNoise;
+	public AudioClip brushStrokeNoise;
 	private AudioSource mySource;
 	//public GameObject testDot;
 	private bool liftedPen = false;
@@ -83,6 +84,12 @@ public class gestureController : MonoBehaviour
 					penTipTrailRender.transform.position = new Vector3 (transform.position.x, transform.position.y, zPos);
 					penTipTrailRender.GetComponent<TrailRenderer> ().time = trailTime;
 //					penTipTrailRender.GetComponent<TrailRenderer> ().startWidth = 1f;
+//					if (mySource.clip != brushStrokeNoise){
+//						mySource.clip = brushStrokeNoise;
+//					}
+//					if (!mySource.isPlaying) {
+//						mySource.Play ();
+//					}
 				}
 			}
 			points.Add(new Vector2(transform.position.x, transform.position.y));

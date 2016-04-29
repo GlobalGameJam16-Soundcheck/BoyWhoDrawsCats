@@ -38,14 +38,24 @@ public class tileStuff : MonoBehaviour {
 	public List<GameObject> ratObjs;
 	public bool hasARat = false;
 
+	private AudioSource mySource;
+	public AudioClip ratKillsCat;
+	public AudioClip catKillsRat;
+
+	void Start(){
+		mySource = GetComponent<AudioSource> ();
+	}
+
 	void Update(){
 		if (ratObjs != null && ratObjs.Count > 0) {
 			if (yarnCatObjs != null && yarnCatObjs.Count > 0) {
 				deleteYarnCat (yarnCatObjs [0]);
+				playAudio (true);
 			}
 			if (attackCatObjs != null && attackCatObjs.Count > 0) {
 				deleteRat (ratObjs [0]);
 				deleteAttackCat (attackCatObjs [0]);
+				playAudio (false);
 			} 
 		}
 		if (yarnCatObjs != null && yarnCatObjs.Count > 0 && canPlayWithYarn()) {
@@ -59,6 +69,14 @@ public class tileStuff : MonoBehaviour {
 		if (isBoyTile && isEnd) {
 			endObj.GetComponent<endControl> ().hitEnd ();
 		}
+	}
+
+	private void playAudio(bool ratKilledCat){
+		mySource.clip = ratKillsCat;
+		if (!ratKilledCat) {
+			mySource.clip = catKillsRat;
+		}
+		mySource.Play ();
 	}
 
 	public void setBoyTile(GameObject boyGam){

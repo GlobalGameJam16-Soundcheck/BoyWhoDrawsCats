@@ -15,6 +15,9 @@ public class doorController : MonoBehaviour {
 	private SpriteRenderer mySprite;
 	private int doorDamage;
 	private int numOnYarn;
+	private AudioSource mySource;
+	public AudioClip webOn;
+	public AudioClip webOff;
 
 	// Use this for initialization
 	void Start () {
@@ -32,6 +35,7 @@ public class doorController : MonoBehaviour {
 		doorDamage = 1;
 		numOnYarn = 1;
 		setActive ();
+		mySource = GetComponent<AudioSource> ();
 	}
 
 	public void initialize(int i, int j, Color c, int v){
@@ -61,6 +65,10 @@ public class doorController : MonoBehaviour {
 		}
 		Debug.Log("numOnYarn: " + numOnYarn);
 		if (numOnYarn == 0) {
+			if (mySource != null) {
+				mySource.clip = webOn;
+				mySource.Play ();
+			}
 			inactive = false;
 			mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 1f);
 			tileScript.setDoor (true);
@@ -71,6 +79,10 @@ public class doorController : MonoBehaviour {
 		numOnYarn++;
 		Debug.Log("numOnYarn: " + numOnYarn);
 		if (numOnYarn > 0) {
+			if (mySource != null) {
+				mySource.clip = webOff;
+				mySource.Play ();
+			}
 			inactive = true;
 			mySprite.color = new Color (mySprite.color.r, mySprite.color.g, mySprite.color.b, 0.2f);
 			tileScript.setDoor (false);

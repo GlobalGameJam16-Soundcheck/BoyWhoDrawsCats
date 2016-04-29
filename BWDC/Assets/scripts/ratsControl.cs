@@ -14,6 +14,9 @@ public class ratsControl : allCatsControl {
 	private float origMoveSpeedOnElev;
 	private bool falling;
 	private int damage;
+	private AudioSource mySource;
+	private float hissTime;
+	private float origHissTime;
 
 	// Use this for initialization
 	void Start () {
@@ -38,11 +41,19 @@ public class ratsControl : allCatsControl {
 		origMoveSpeedOnElev = moveSpeed / 2f;
 		falling = false;
 		damage = 1;
+		hissTime = Random.Range (7f, 42f);
+		mySource = GetComponent<AudioSource> ();
+		origHissTime = hissTime;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (started && timeIsNormal()) {
+			hissTime -= Time.deltaTime;
+			if (hissTime <= 0f) {
+				mySource.Play ();
+				hissTime = origHissTime;
+			}
 			base.updateTilePos ();
 			moveForwards ();
 			float speed = moveSpeed / speedDenom;
