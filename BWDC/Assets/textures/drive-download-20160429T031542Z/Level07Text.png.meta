@@ -1,0 +1,137 @@
+fileFormatVersion: 2
+guid: 0ac15e3e5c324bf46998ad667e08c679
+timeCreated: 1461902433
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Level07Text_0
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 150
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Level07Text_0
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 30
+        width: 538
+        height: 540
+      alignment: 9
+      pivot: {x: 0.5376263, y: 0.123881675}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 29.75705, y: -8.896103}
+        - {x: 33.75705, y: -0.8961029}
+        - {x: 44.75705, y: -1.8961029}
+        - {x: 93.75705, y: -5.896103}
+        - {x: 130.75705, y: -8.896103}
+        - {x: 143.75705, y: -9.896103}
+        - {x: 168.75705, y: -11.896103}
+        - {x: 203.75705, y: -14.896103}
+        - {x: 217.75705, y: -15.896103}
+        - {x: 227.75705, y: -15.896103}
+        - {x: 232.75705, y: -12.896103}
+        - {x: 237.75705, y: -3.896103}
+        - {x: 237.75705, y: 118.1039}
+        - {x: 236.75705, y: 145.1039}
+        - {x: 237.75705, y: 152.1039}
+        - {x: 237.75705, y: 221.1039}
+        - {x: 236.75705, y: 234.1039}
+        - {x: 236.75705, y: 371.10388}
+        - {x: 237.75705, y: 385.10388}
+        - {x: 237.75705, y: 428.10388}
+        - {x: 236.75705, y: 438.10388}
+        - {x: 225.75705, y: 448.10388}
+        - {x: 216.75705, y: 452.10388}
+        - {x: 134.75705, y: 452.10388}
+        - {x: 120.75705, y: 453.10388}
+        - {x: 107.75705, y: 455.10388}
+        - {x: 95.75705, y: 457.10388}
+        - {x: 82.75705, y: 458.10388}
+        - {x: -251.24295, y: 458.10388}
+        - {x: -253.24295, y: 462.10388}
+        - {x: -260.24295, y: 464.10388}
+        - {x: -264.24295, y: 464.10388}
+        - {x: -269.24295, y: 459.10388}
+        - {x: -273.24295, y: 446.10388}
+        - {x: -271.24295, y: 437.10388}
+        - {x: -272.24295, y: 432.10388}
+        - {x: -275.24295, y: 393.10388}
+        - {x: -277.24295, y: 379.10388}
+        - {x: -277.24295, y: 352.10388}
+        - {x: -278.24295, y: 348.10388}
+        - {x: -278.24295, y: 301.10388}
+        - {x: -279.24295, y: 300.10388}
+        - {x: -279.24295, y: 17.103897}
+        - {x: -276.24295, y: 10.103897}
+        - {x: -271.24295, y: 4.103897}
+        - {x: -266.24295, y: 0.103897095}
+        - {x: -257.24295, y: -1.8961029}
+        - {x: -255.24295, y: 2.103897}
+        - {x: -247.24295, y: 1.1038971}
+        - {x: -223.24295, y: 0.103897095}
+        - {x: -198.24295, y: -0.8961029}
+        - {x: -176.24295, y: -1.8961029}
+        - {x: -149.24295, y: -2.896103}
+        - {x: -128.24295, y: -3.896103}
+        - {x: -103.24295, y: -4.896103}
+        - {x: -79.24295, y: -5.896103}
+        - {x: -59.24295, y: -5.896103}
+        - {x: -59.24295, y: -7.896103}
+        - {x: -33.24295, y: -7.896103}
+        - {x: -26.24295, y: -9.896103}
+        - {x: -1.2429504, y: -41.896103}
+        - {x: -1.2429504, y: -44.896103}
+        - {x: 3.7570496, y: -49.896103}
+        - {x: 10.75705, y: -54.896103}
+        - {x: 18.75705, y: -54.896103}
+        - {x: 22.75705, y: -50.896103}
+        - {x: 25.75705, y: -42.896103}
+        - {x: 27.75705, y: -21.896103}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
