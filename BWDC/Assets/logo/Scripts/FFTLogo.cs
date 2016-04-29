@@ -28,5 +28,10 @@ public class FFTLogo : MonoBehaviour {
             int i = Application.loadedLevel;
             Application.LoadLevel(i + 1);
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            int i = Application.loadedLevel;
+            Application.LoadLevel(i + 1);
+        }
 	}
 }
